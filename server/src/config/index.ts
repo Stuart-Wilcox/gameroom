@@ -1,0 +1,1 @@
+export const frontendUrl = 'localhost:8082';
