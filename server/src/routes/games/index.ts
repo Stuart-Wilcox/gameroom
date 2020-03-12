@@ -1,6 +1,12 @@
 import { Router } from 'express';
-import { getUser, validate } from '../helpers';
-import { Game, Room, User } from '../../models';
+import { validate } from '../utils';
+import {
+  list,
+  create,
+  remove,
+  retrieve,
+  update,
+} from './helpers';
 
 const router = Router();
 
@@ -8,117 +14,95 @@ const router = Router();
  * Returns all games available to a user, which means all games in which they are a player
  */
 router.get('/', async (req, res) => {
-  const user = await getUser(req, res);
-  if (!user) {
-    return;
-  }
+  const user = req.user as any;
 
-  Game.find({
-    isActive: true,
-    players: { id: user.id },
-  }).sort(
-    'created'
-  ).exec((err, games) => {
-    if (err) {
-      return res.status(500).json({ err });
-    }
-
-    return res.json(games);
-  });
+  const games = await list(user.id);
+  return res.json({ games });
 });
 
 /**
  * Creates a new game using the given parameters
  */
 router.post('/', async (req, res) => {
-  const user = await getUser(req, res);
-  if (!user) {
-    return;
-  }
-
+  const user = req.user as any;
   const {
-    name,
     room,
+    name,
     gameSettings,
   } = req.body;
 
   const err = await validate({ name, room, gameSettings });
   if (err) {
-    res.status(400).json({ err });
-    return;
+    return res.status(400).json({ err });
   }
 
-  if (!name) {
-    res.status(400).json({ err: 'Field name is required' })
-    return;
+  const game = await create(user.id, room, name, gameSettings);
+  if (game) {
+    return res.json({ game });
   }
 
-  // ensure room is valid
-  try {
-    const validRoom = await Room.findOne({ id: room, isActive: true })
-    if (!validRoom) {
-      res.status(400).json({ err: 'Invalid room given' });
-      return;
-    }
-  } catch (err) {
-    res.status(500).json({ err });
-    return;
-  }
-
-  const newGame = new Game({
-    name,
-    room,
-    gameSettings,
-    isActive: true,
-  });
-
-  try {
-    const game = newGame.save();
-    res.json({ game });
-    return;
-  } catch (err) {
-    res.status(500).json({ err });
-    return;
-  }
+  return res.status(404).json({ err: `Unable to create game, please ensure Room id ${room} exists` });
 });
 
 /**
  * Removes a room with the given id
  */
-router.delete('/', (req, res) => {
-  // TODO remove room
+router.delete('/:id', async (req, res) => {
+  const user = req.user as any;
+  const { id } = req.params;
+
+  const err = await validate({ id });
+  if (err) {
+    return res.status(400).json({ err });
+  }
+
+  const game = await remove(user.id, id);
+  if (game) {
+    return res.json({ game });
+  }
+
+  return res.status(404).json({ err: `Game id ${id} not found` });
 });
 
 /**
  * Retrieves a room with the given id
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
+  const user = req.user as any;
   const { id } = req.params;
-  // TODO retrieve details for room  
+ 
+  const err = await validate({ id });
+  if (err) {
+    return res.status(400).json({ err });
+  }
+
+  const game = await retrieve(user.id, id);
+  if (game) {
+    return res.json({ game });
+  }
+  
+  return res.status(404).json({ err: `Game id ${id} not found` });
 });
 
 /**
  * Updates a room with the given id
  */
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
+  const user = req.user as any;
   const { id } = req.params;
-  // TODO update details for room
-});
+  const { name, gameSettings } = req.body;
 
-/**
- * Invites a member to the room
- */
-router.put('/:id/inviteMember', (req, res) => {
-  const { id } = req.params;
-  // TODO invite member
-});
+  const err = await validate({ id });
+  if (err) {
+    return res.status(400).json({ err });
+  }
 
-/**
- * Uninvites a member from the group
- */
-router.put('/:id/uninviteMember', (req, res) => {
-  const { id } = req.params;
-  // TODO invite member
+  const game = await update(user.id, id, name, gameSettings);
+  if (game) {
+    return res.json({ game });
+  }
+
+  return res.status(404).json({ err: `Game id ${id} not found` });
 });
 
 export default router;

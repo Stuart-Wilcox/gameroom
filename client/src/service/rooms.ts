@@ -22,9 +22,9 @@ export const retrieveRoom = async (id: string) => {
   return sendRequest(url, 'GET');
 };
 
-export const updateRoom = async (id: string, name: string) => {
+export const updateRoom = async (id: string, name?: string, isPrivate?: boolean) => {
   const url = `${baseURL}/api/rooms/$ {id}`;
-  const body = { name };
+  const body = { name, isPrivate };
   return sendRequest(url, 'PUT', body);
 };
 

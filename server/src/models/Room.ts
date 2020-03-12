@@ -2,10 +2,6 @@ import * as UUID from 'uuid';
 import mongoose from './mongoose';
 
 const RoomSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    default: () => UUID(),
-  },
   created: {
     type: Date,
     default: () => new Date()

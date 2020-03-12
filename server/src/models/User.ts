@@ -2,10 +2,6 @@ import * as UUID from 'uuid';
 import mongoose from './mongoose';
 
 const UserSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    default: () => UUID(),
-  },
   username: {
     type: String,
     unique: true,

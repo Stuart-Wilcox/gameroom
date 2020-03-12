@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux'
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 // import { AutoSizer, Column, Table, TableCellRenderer, TableHeaderProps } from 'react-virtualized';
 
 import IState from 'src/redux/states';
@@ -9,22 +10,17 @@ import {
   StyledRoomsPage,
   StyledHeader,
   StyledBody,
+  StyledTableContainer,
 } from './index.style';
 import { 
   Button,
   ErrorSnackbar,
-  Paper,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
   Title,
 } from '../common';
-import EmptyDisplay from './EmptyDisplay';
 import CreateRoomModal from './CreateRoomModal';
+import RoomsTable from './RoomsTable';
 
-interface IProps {
+interface IProps extends RouteComponentProps {
   rooms?: any;
   isLoading: boolean;
   err?: string;
@@ -33,6 +29,7 @@ interface IProps {
 
 const RoomsPage: React.FC<IProps> = (props: IProps) => {
   const {
+    history,
     rooms=[],
     isLoading,
     err='',
@@ -53,26 +50,15 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
     }
   }, [err]);
 
-  const columns = [
-    {
-      id: 0,
-      label: 'Name',
-    },
-    {
-      id: 1,
-      label: 'Creator',
-    },
-    {
-      id: 2,
-      label: 'Created',
-    },
-  ];
-  
+  const handleSelectRoom = (roomId: string) => {
+    history.push(`/rooms/${roomId}`);
+  };
+
   return (
     <StyledRoomsPage>
       <StyledHeader>
         <Title>
-          Available Rooms
+          Rooms
         </Title>
         <Button
           variant={'contained'}
@@ -83,35 +69,23 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
         </Button>
       </StyledHeader>
       <StyledBody>
-        <Paper>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {
-                  columns.map(column => (
-                    <TableCell key={column.id}>
-                      {column.label}
-                    </TableCell>
-                  ))
-                }
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                rooms.map((room: any) => (
-                  <TableRow key={room.id}>
-                    <TableCell>{room.name}</TableCell>
-                    <TableCell>{room.creator.username}</TableCell>
-                    <TableCell>{room.created}</TableCell>
-                  </TableRow>
-                ))
-              }
-            </TableBody>
-          </Table>
-          {
-            rooms.length === 0 && <EmptyDisplay onCreateRoom={() => setCreateModalOpen(true)}/>
-          }
-        </Paper>
+        {/* 
+        <StyledTableContainer>
+          <h4>My Rooms</h4>
+          <RoomsTable
+            rooms={rooms.filter((room: any) => room.creator === '1')}
+            onCreateRoom={() => setCreateModalOpen(true)}
+          />
+        </StyledTableContainer> 
+        */}
+        <StyledTableContainer>
+          <h4>All Rooms</h4>
+          <RoomsTable
+            rooms={rooms}
+            onCreateRoom={() => setCreateModalOpen(true)}
+            onSelectRoom={(roomId: string) => handleSelectRoom(roomId)}
+          />
+        </StyledTableContainer>
       </StyledBody>
       <CreateRoomModal
         open={createModalOpen}
@@ -127,6 +101,8 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
 }
 
 
+const WithRouterRoomsPage = withRouter(RoomsPage);
+
 const mapStateToProps = (state: IState) => ({
   rooms: state.rooms.rooms.data,
   isLoading: state.rooms.rooms.isLoading,
@@ -141,4 +117,4 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RoomsPage);
+)(WithRouterRoomsPage);

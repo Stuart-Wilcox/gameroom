@@ -4,7 +4,7 @@ import * as PassportLocal from 'passport-local';
 import * as JWT from 'jsonwebtoken';
 
 import secret from './secret';
-import { validate } from '../routes/helpers';
+import { validate } from '../routes/utils';
 import generateAndSendMFAToken from './utils';
 import { User, validateMFAToken } from '../models';
 

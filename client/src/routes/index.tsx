@@ -4,9 +4,9 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import LoginPage from 'src/modules/login';
 import HomePage from 'src/modules/home';
 import RoomsPage from 'src/modules/rooms';
-import RoomsDetailsPage from 'src/modules/rooms-details';
+import RoomDetailsPage from 'src/modules/room-details';
 import GamesPage from 'src/modules/games';
-import GamesDetailsPage from 'src/modules/games-details';
+import GameDetailsPage from 'src/modules/game-details';
 
 const Routes: React.FC = () => {
   return (
@@ -19,13 +19,13 @@ const Routes: React.FC = () => {
           <RoomsPage />
         </Route>
         <Route path='/rooms/:id' exact={true}>
-          <RoomsDetailsPage />
+          <RoomDetailsPage />
         </Route>
         <Route path='/games' exact={true}>
           <GamesPage />
         </Route>
         <Route path='/games/:id' exact={true}>
-          <GamesDetailsPage />
+          <GameDetailsPage />
         </Route>
         <Route path='/'>
           <HomePage />

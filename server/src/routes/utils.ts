@@ -27,7 +27,7 @@ export const getUser = async (req: Express.Request, res: Express.Response): Prom
 
 export const validate = async (fields: Object): Promise<string|undefined> => {
   for (const [key, value] of Object.entries(fields)) {
-    if (!value) {
+    if (value === null || value === undefined) {
       return `Field ${key} is required`;
     }
   }

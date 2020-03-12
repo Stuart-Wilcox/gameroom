@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open --hot --watch",
+    "start": "webpack-dev-server --mode development --open --hot --watch --port 8082",
     "build": "webpack --mode production"
   },
   "author": "",

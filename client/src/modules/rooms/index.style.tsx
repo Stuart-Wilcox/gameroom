@@ -23,6 +23,11 @@ export const StyledBody = styled.div`
   display: block;
 `;
 
+export const StyledTableContainer = styled.div`
+  padding-top: 10px;
+  padding-bottom: 10px;
+`;
+
 export const StyledEmptyDisplay = styled.div`
   font-size: 14px;
   padding-top: 30px;
