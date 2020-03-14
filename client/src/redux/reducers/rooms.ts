@@ -14,6 +14,10 @@ const initialState: IRoomsState = {
   room: {
     isLoading: false,
     err: '',
+  },
+  joinRoom: {
+    isLoading: false,
+    err: '',
   }
 };
 
@@ -39,6 +43,13 @@ export default function (state = initialState, action: any): IRoomsState {
       return retrieveRoomSuccess(state, action.payload);
     case RoomsActions.RETRIEVE_ROOM_FAILED:
       return retrieveRoomFailed(state, action.payload);
+    
+    case RoomsActions.JOIN_ROOM:
+      return joinRoom(state);
+    case RoomsActions.JOIN_ROOM_SUCCESS:
+      return joinRoomSuccess(state, action.payload);
+    case RoomsActions.JOIN_ROOM_FAILED:
+      return joinRoomFailed(state, action.payload);
     
     default:
       return state;
@@ -161,5 +172,41 @@ const retrieveRoomFailed = (state: IRoomsState, payload: any): IRoomsState => {
       isLoading: false,
       err,
     },
+  };
+};
+
+const joinRoom = (state: IRoomsState): IRoomsState => {
+  return {
+    ...state,
+    joinRoom: {
+      ...state.joinRoom,
+      data: undefined,
+      isLoading: true,
+      err: '',
+    }
+  };
+};
+const joinRoomSuccess = (state: IRoomsState, payload: any): IRoomsState => {
+  const data = payload.rooms;
+  return {
+    ...state,
+    joinRoom: {
+      ...state.joinRoom,
+      data,
+      isLoading: false,
+      err: '',
+    }
+  };
+};
+const joinRoomFailed = (state: IRoomsState, payload: any): IRoomsState => {
+  const err = payload;
+  return {
+    ...state,
+    joinRoom: {
+      ...state.joinRoom,
+      data: undefined,
+      isLoading: false,
+      err,
+    }
   };
 };

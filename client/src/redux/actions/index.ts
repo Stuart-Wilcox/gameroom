@@ -7,6 +7,8 @@ export {
   retrieveRoomThunk as retrieveRoom,
   inviteMemberToRoomThunk as inviteMemberToRoom,
   uninviteMemberFromRoomThunk as uninviteMemberFromRoom,
+  joinRoomThunk as joinRoom,
+  leaveRoomThunk as leaveRoom,
 } from './rooms';
 
 import * as LoginActions from './login';

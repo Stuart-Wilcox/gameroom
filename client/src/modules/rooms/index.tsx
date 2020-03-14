@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-// import { AutoSizer, Column, Table, TableCellRenderer, TableHeaderProps } from 'react-virtualized';
 
 import IState from 'src/redux/states';
 import { listRooms } from 'src/redux/actions';
@@ -18,6 +17,7 @@ import {
   Title,
 } from '../common';
 import CreateRoomModal from './CreateRoomModal';
+import JoinRoomModal from './JoinRoomModal';
 import RoomsTable from './RoomsTable';
 
 interface IProps extends RouteComponentProps {
@@ -42,6 +42,8 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
   }, []);
 
   const [createModalOpen, setCreateModalOpen] = React.useState<boolean>(false);
+  const [joinRoomModalOpen, setJoinRoomModalOpen] = React.useState<boolean>(false);
+  const [joinRoom, setJoinRoom] = React.useState<any>(null);
   const [displayError, setDisplayError] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -50,8 +52,16 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
     }
   }, [err]);
 
-  const handleSelectRoom = (roomId: string) => {
-    history.push(`/rooms/${roomId}`);
+  const handleSelectRoom = (room: any) => {
+    // open the join room modal
+    setJoinRoom(room);
+    setJoinRoomModalOpen(true);
+    // history.push(`/rooms/${roomId}`);
+  };
+
+  const handleJoinRoomModalClose = () => {
+    setJoinRoom(null);
+    setJoinRoomModalOpen(false);
   };
 
   return (
@@ -83,13 +93,22 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
           <RoomsTable
             rooms={rooms}
             onCreateRoom={() => setCreateModalOpen(true)}
-            onSelectRoom={(roomId: string) => handleSelectRoom(roomId)}
+            onSelectRoom={(room: any) => handleSelectRoom(room)}
           />
         </StyledTableContainer>
       </StyledBody>
+
       <CreateRoomModal
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
+        onComplete={() => null}
+        onError={(err: string) => setDisplayError(err)}
+      />
+      <JoinRoomModal
+        roomId={joinRoom.id}
+        roomName={joinRoom.name}
+        open={joinRoomModalOpen}
+        onClose={() => handleJoinRoomModalClose()}
         onComplete={() => null}
         onError={(err: string) => setDisplayError(err)}
       />

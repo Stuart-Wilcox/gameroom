@@ -6,6 +6,8 @@ import {
   updateRoom as performUpdateRoom,
   inviteMemberToRoom as performInviteMemberToRoom,
   uninviteMemberFromRoom as performUninviteMemberFromRoom,
+  joinRoom as performJoinRoom,
+  leaveRoom as performLeaveRoom,
 } from 'src/service';
 
 export const LIST_ROOMS = 'LIST_ROOMS';
@@ -35,6 +37,14 @@ export const INVITE_MEMBER_TO_ROOM_FAILED = 'INVITE_MEMBER_TO_ROOM_FAILED';
 export const UNINVITE_MEMBER_FROM_ROOM = 'UNINVITE_MEMBER_FROM_ROOM';
 export const UNINVITE_MEMBER_FROM_ROOM_SUCCESS = 'UNINVITE_MEMBER_FROM_ROOM_SUCCESS';
 export const UNINVITE_MEMBER_FROM_ROOM_FAILED = 'UNINVITE_MEMBER_FROM_ROOM_FAILED';
+
+export const JOIN_ROOM = 'JOIN_ROOM';
+export const JOIN_ROOM_SUCCESS = 'JOIN_ROOM_FAILED';
+export const JOIN_ROOM_FAILED = 'JOIN_ROOM_FAILED';
+
+export const LEAVE_ROOM = 'LEAVE_ROOM';
+export const LEAVE_ROOM_SUCCESS = 'LEAVE_ROOM_FAILED';
+export const LEAVE_ROOM_FAILED = 'LEAVE_ROOM_FAILED';
 
 
 export const listRooms = () => ({
@@ -124,6 +134,32 @@ export const uninviteMemberFromRoomSuccess = (response: any) => ({
 });
 export const uninviteMemberFromRoomFailed = (err: any) => ({
   type: UNINVITE_MEMBER_FROM_ROOM_FAILED,
+  payload: err,
+});
+
+export const joinRoom = (roomId: string) => ({
+  type: JOIN_ROOM,
+  payload: { roomId },
+});
+export const joinRoomSuccess = (response: any) => ({
+  type: JOIN_ROOM_SUCCESS,
+  payload: response,
+});
+export const joinRoomFailed = (err: any) => ({
+  type: JOIN_ROOM_FAILED,
+  payload: err,
+});
+
+export const leaveRoom = (roomId: string) => ({
+  type: LEAVE_ROOM,
+  payload: { roomId },
+});
+export const leaveRoomSuccess = (response: any) => ({
+  type: LEAVE_ROOM_SUCCESS,
+  payload: response,
+});
+export const leaveRoomFailed = (err: any) => ({
+  type: LEAVE_ROOM_FAILED,
   payload: err,
 });
 
@@ -245,5 +281,29 @@ export const uninviteMemberFromRoomThunk = (id: string, userId: string) => async
   }
   catch (err) {
     dispatch(uninviteMemberFromRoomFailed(err));
+  }
+};
+
+export const joinRoomThunk = (roomId: string) => async (dispatch: React.Dispatch<any>) => {
+  dispatch(joinRoom(roomId));
+
+  try {
+    const rooms = await performJoinRoom(roomId);
+    dispatch(joinRoomSuccess(rooms));
+  }
+  catch (err) {
+    dispatch(joinRoomFailed(err));
+  }
+};
+
+export const leaveRoomThunk = (roomId: string) => async (dispatch: React.Dispatch<any>) => {
+  dispatch(joinRoom(roomId));
+
+  try {
+    const rooms = await performLeaveRoom(roomId);
+    dispatch(joinRoomSuccess(rooms));
+  }
+  catch (err) {
+    dispatch(joinRoomFailed(err));
   }
 };

@@ -13,7 +13,7 @@ import EmptyDisplay from './EmptyDisplay';
 interface IProps {
   rooms: any;
   onCreateRoom: () => void;
-  onSelectRoom: (roomId: string) => void;
+  onSelectRoom: (room: any) => void;
 }
 
 const RoomsTable: React.FC<IProps> = (props: IProps) => {
@@ -59,7 +59,7 @@ const RoomsTable: React.FC<IProps> = (props: IProps) => {
                 key={room._id}
                 style={{ cursor: 'pointer' }}
                 hover={true}
-                onClick={() => onSelectRoom(room._id)}
+                onClick={() => onSelectRoom(room)}
               >
                 <TableCell>{room.name}</TableCell>
                 <TableCell>{room.creator.username}</TableCell>
