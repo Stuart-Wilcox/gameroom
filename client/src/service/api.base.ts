@@ -10,6 +10,12 @@ const sendRequest = async (url: string, method: string, bodyObj?: any) => {
   };
   
   const response = await fetch(url, { method, body, headers });
+
+  // unauthorized redirect to login
+  if (response.status === 401) {
+    window.location.href = '/login';
+  }
+
   return response.json();
 };
 

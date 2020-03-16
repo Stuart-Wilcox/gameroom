@@ -8,6 +8,8 @@ import {
   update,
   inviteMember,
   uninviteMember,
+  joinRoom,
+  leaveRoom,
 } from './helpers';
 
 const router = Router();
@@ -153,6 +155,38 @@ router.put('/:id/uninviteMember', async (req, res) => {
   }
 
   return res.status(404).json({ err: `Room id ${id} or User ${id} not found` });
+});
+
+/**
+ * Joins a room
+ */
+router.post('/:id/join', async (req, res) => {
+  if (!req.user) {
+    return res.status(400).json({ err: 'User not found' });
+  }
+
+  const user = req.user as any;
+  const { id } = req.params;
+
+  const room = joinRoom(user._id, id);
+
+  return res.status(200).json({ room: 'Not complete' });
+});
+
+/**
+ * Leaves a room
+ */
+router.post('/:id/leave', async (req, res) => {
+  if (!req.user) {
+    return res.status(400).json({ err: 'User not found' });
+  }
+
+  const user = req.user as any;
+  const { id } = req.params;
+
+  const room = leaveRoom(user._id, id);
+
+  return res.status(200).json({ message: 'Not complete' });
 });
 
 export default router;

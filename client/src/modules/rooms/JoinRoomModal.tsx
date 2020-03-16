@@ -91,7 +91,7 @@ const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
           disabled={isLoading}
           onClick={() => joinRoom(roomId)}
         >
-          Create Room
+          Join Room
         </Button>
       </DialogActions>
     </Dialog>

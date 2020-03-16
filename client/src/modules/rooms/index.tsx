@@ -43,7 +43,7 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
 
   const [createModalOpen, setCreateModalOpen] = React.useState<boolean>(false);
   const [joinRoomModalOpen, setJoinRoomModalOpen] = React.useState<boolean>(false);
-  const [joinRoom, setJoinRoom] = React.useState<any>(null);
+  const [joinRoom, setJoinRoom] = React.useState<any>({});
   const [displayError, setDisplayError] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -105,7 +105,7 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
         onError={(err: string) => setDisplayError(err)}
       />
       <JoinRoomModal
-        roomId={joinRoom.id}
+        roomId={joinRoom._id}
         roomName={joinRoom.name}
         open={joinRoomModalOpen}
         onClose={() => handleJoinRoomModalClose()}

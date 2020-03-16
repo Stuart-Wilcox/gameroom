@@ -107,3 +107,11 @@ export const uninviteMember = async (creator: string, _id: string, userId: strin
   room.invitedMembers = room.invitedMembers.filter(member => member !== userId);
   return room.save();
 };
+
+export const joinRoom = (userId: string, roomId: string) => {
+
+};
+
+export const leaveRoom = (userId: string, roomId: string) => {
+  
+};
