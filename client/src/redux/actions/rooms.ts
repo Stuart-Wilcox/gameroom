@@ -39,7 +39,7 @@ export const UNINVITE_MEMBER_FROM_ROOM_SUCCESS = 'UNINVITE_MEMBER_FROM_ROOM_SUCC
 export const UNINVITE_MEMBER_FROM_ROOM_FAILED = 'UNINVITE_MEMBER_FROM_ROOM_FAILED';
 
 export const JOIN_ROOM = 'JOIN_ROOM';
-export const JOIN_ROOM_SUCCESS = 'JOIN_ROOM_FAILED';
+export const JOIN_ROOM_SUCCESS = 'JOIN_ROOM_SUCCESS';
 export const JOIN_ROOM_FAILED = 'JOIN_ROOM_FAILED';
 
 export const LEAVE_ROOM = 'LEAVE_ROOM';
@@ -288,22 +288,36 @@ export const joinRoomThunk = (roomId: string) => async (dispatch: React.Dispatch
   dispatch(joinRoom(roomId));
 
   try {
-    const rooms = await performJoinRoom(roomId);
-    dispatch(joinRoomSuccess(rooms));
+    const { room, err } = await performJoinRoom(roomId);
+
+    if (err) {
+      console.log(err);
+      dispatch(joinRoomFailed(err));
+    }
+    else {
+      dispatch(joinRoomSuccess(room));
+    }
   }
   catch (err) {
+    console.log(err);
     dispatch(joinRoomFailed(err));
   }
 };
 
 export const leaveRoomThunk = (roomId: string) => async (dispatch: React.Dispatch<any>) => {
-  dispatch(joinRoom(roomId));
+  dispatch(leaveRoom(roomId));
 
   try {
-    const rooms = await performLeaveRoom(roomId);
-    dispatch(joinRoomSuccess(rooms));
+    const { room, err } = await performLeaveRoom(roomId);
+
+    if (err) {
+      dispatch(leaveRoomFailed(err));
+    }
+    else {
+      dispatch(leaveRoomSuccess(room));
+    }
   }
   catch (err) {
-    dispatch(joinRoomFailed(err));
+    dispatch(leaveRoomFailed(err));
   }
 };

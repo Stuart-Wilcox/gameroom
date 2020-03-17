@@ -26,6 +26,14 @@ const RoomSchema = new mongoose.Schema({
       },
     ],
   },
+  currentMembers: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+  },
   isActive: {
     type: Boolean,
     default: false,
@@ -40,6 +48,7 @@ interface IRoom extends mongoose.Document {
   creator: string,
   invitedMembers: string[],
   isActive: boolean,
+  currentMembers: string[],
 };
 
 const Room = mongoose.model<IRoom>('Room', RoomSchema);

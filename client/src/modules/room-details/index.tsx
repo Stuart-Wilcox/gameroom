@@ -5,6 +5,8 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import IState from 'src/redux/states';
 import { retrieveRoom } from 'src/redux/actions';
 
+import { User } from '../../utils';
+
 import {
   StyledRoomDetailsPage,
 } from './index.style';
@@ -15,6 +17,7 @@ import {
 } from '../common';
 import RoomDetailsHeader from './RoomDetailsHeader';
 import RoomDetailsBody from './RoomDetailsBody';
+import JoinRoomModal from './JoinRoomModal';
 
 
 interface IProps extends RouteComponentProps {
@@ -33,11 +36,40 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
     onRetrieveRoom,    
   } = props;
   
+  
+  const [joinRoomModalOpen, setJoinRoomModalOpen] = React.useState<boolean>(false);
+  const [joinRoom, setJoinRoom] = React.useState<any>({});
+  const [displayError, setDisplayError] = React.useState<string>('');
+
+  const currentUserIsJoined = React.useMemo(() => {
+    if (room) {
+      const user = User.get();
+      return room.currentMembers.some((member: any) => member._id === user._id);
+    }
+    return false;
+  }, [room]);
+  
   // fetch room on mount
   React.useEffect(() => {
     const roomId = (match.params as any)?.id;
     onRetrieveRoom(roomId);
   }, []);
+
+  React.useEffect(() => {
+    if (err) {
+      setDisplayError(err);
+    }
+  }, [err]);
+
+  const handleJoinRoomComplete = (room: any) => {
+  };
+
+  const handleJoinRoomModalClose = () => {
+    setJoinRoom({});
+    setJoinRoomModalOpen(false);
+  };
+
+  console.log(currentUserIsJoined, User.get());
   
   // show the users in this room, games history, etc
   // stats, create new game (which navigates to games page)
@@ -45,8 +77,21 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
     <StyledRoomDetailsPage>
       <RoomDetailsHeader
         name={room?.name}
+        currentUserIsJoined={currentUserIsJoined}
       />
       <RoomDetailsBody />
+      
+      <JoinRoomModal
+        roomId={joinRoom._id}
+        roomName={joinRoom.name}
+        open={joinRoomModalOpen}
+        onClose={() => handleJoinRoomModalClose()}
+        onComplete={(room) => handleJoinRoomComplete(room)}
+        onError={(err: string) => setDisplayError(err)}
+      />
+      <ErrorSnackbar
+        message={displayError}
+      />
     </StyledRoomDetailsPage>
   );
 }

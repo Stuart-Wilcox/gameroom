@@ -17,7 +17,6 @@ import {
   Title,
 } from '../common';
 import CreateRoomModal from './CreateRoomModal';
-import JoinRoomModal from './JoinRoomModal';
 import RoomsTable from './RoomsTable';
 
 interface IProps extends RouteComponentProps {
@@ -42,8 +41,6 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
   }, []);
 
   const [createModalOpen, setCreateModalOpen] = React.useState<boolean>(false);
-  const [joinRoomModalOpen, setJoinRoomModalOpen] = React.useState<boolean>(false);
-  const [joinRoom, setJoinRoom] = React.useState<any>({});
   const [displayError, setDisplayError] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -53,16 +50,10 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
   }, [err]);
 
   const handleSelectRoom = (room: any) => {
-    // open the join room modal
-    setJoinRoom(room);
-    setJoinRoomModalOpen(true);
-    // history.push(`/rooms/${roomId}`);
+    history.push(`/rooms/${room._id}`);
   };
 
-  const handleJoinRoomModalClose = () => {
-    setJoinRoom(null);
-    setJoinRoomModalOpen(false);
-  };
+  
 
   return (
     <StyledRoomsPage>
@@ -101,14 +92,6 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
       <CreateRoomModal
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        onComplete={() => null}
-        onError={(err: string) => setDisplayError(err)}
-      />
-      <JoinRoomModal
-        roomId={joinRoom._id}
-        roomName={joinRoom.name}
-        open={joinRoomModalOpen}
-        onClose={() => handleJoinRoomModalClose()}
         onComplete={() => null}
         onError={(err: string) => setDisplayError(err)}
       />

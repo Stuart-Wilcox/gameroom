@@ -19,11 +19,14 @@ export const create = async (creator: string, name: string, isPrivate: boolean) 
   const newRoom = new Room({
     name,
     isPrivate,
-    isActive: true,
     creator,
+    isActive: true,
+    invitedMembers: [],
+    currentMembers: [],
   });
 
-  return newRoom.save();
+  const room = await newRoom.save();
+  return Room.populate(room, { path: "creator" });
 };
 
 export const remove = async (creator: string, _id: string) => {
@@ -34,16 +37,22 @@ export const remove = async (creator: string, _id: string) => {
   });
 };
 
-export const retrieve = async (creator: string, _id: string) => {
+export const retrieve = async (userId: string, _id: string) => {
   return Room
     .findOne({
       _id,
       isActive: true,
     }).or([
-      { isPrivate: true, invitedMembers: creator },
-      { isPrivate: true, creator },
+      { isPrivate: true, invitedMembers: userId },
+      { isPrivate: true, creator: userId },
       { isPrivate: false },
-    ]);
+    ]).populate(
+      'creator'
+    ).populate(
+      'invitedMembers'
+    ).populate(
+      'currentMembers'
+    );
 };
 
 export const update = async (creator: string, _id: string, name?: string, isPrivate?: boolean) => {
@@ -108,10 +117,103 @@ export const uninviteMember = async (creator: string, _id: string, userId: strin
   return room.save();
 };
 
-export const joinRoom = (userId: string, roomId: string) => {
+export const joinRoom = async (userId: string, roomId: string) => {
+  const room = await Room
+    .findOne({ 
+      _id: roomId
+    }).or([
+      { isPrivate: true, invitedMembers: userId },
+      { isPrivate: true, creator: userId },
+      { isPrivate: false },
+    ]);
 
+    if (!room) {
+      return {
+        room: undefined,
+        err: 'Room not found',
+      };
+    }
+
+    // check if user has already joined
+    if (room.currentMembers.includes(userId)) {
+      return {
+        room,
+        err: 'Already joined',
+      };
+    }
+
+  // validate given user actualy exists
+  const user = await User.findById(userId);
+  if (!user) {
+    return {
+      room,
+      err: 'User not found',
+    };
+  }
+
+  if (user.currentRoom) {
+    return {
+      room,
+      err: 'User is already joined to a room',
+    };
+  }
+
+  // re-assign user room
+  user.currentRoom = room._id;
+
+  // add user to room
+  room.currentMembers = [...room.currentMembers, userId];
+  
+  await user.save();
+  return {
+    room: await room.save(),
+    err: undefined,
+  };
 };
 
-export const leaveRoom = (userId: string, roomId: string) => {
-  
+export const leaveRoom = async (userId: string, roomId: string) => {
+  const room = await Room
+    .findOne({ 
+      _id: roomId
+    }).or([
+      { isPrivate: true, invitedMembers: userId },
+      { isPrivate: true, creator: userId },
+      { isPrivate: false },
+    ]);
+
+    if (!room) {
+      return {
+        room: undefined,
+        err: 'Room not found',
+      };
+    }
+
+    // check if user has already joined
+    if (room.currentMembers.includes(userId)) {
+      return {
+        room,
+        err: 'Not already joined',
+      };
+    }
+
+  // validate given user actualy exists
+  const user = await User.findById(userId);
+  if (!user) {
+    return {
+      room,
+      err: 'User not found',
+    };
+  }
+
+  // re-assign user room
+  user.currentRoom = null;
+
+  // remove user from room
+  room.currentMembers = room.currentMembers.filter(member => member !== userId);
+
+  await user.save();
+  return {
+    room: await room.save(),
+    err: undefined,
+  };
 };

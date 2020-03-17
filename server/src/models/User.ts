@@ -17,7 +17,12 @@ const UserSchema = new mongoose.Schema({
       value: { type: String, required: false },
       expires: { type: Date },
     },
-  }
+  },
+  currentRoom: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Room',
+    default: null,
+  },
 });
 
 interface IUser extends mongoose.Document {
@@ -26,6 +31,7 @@ interface IUser extends mongoose.Document {
   email: string,
   isActive: boolean,
   mfaToken: { value: string|null, expires: Date },
+  currentRoom: string|null;
 };
 
 const User = mongoose.model<IUser>('User', UserSchema);

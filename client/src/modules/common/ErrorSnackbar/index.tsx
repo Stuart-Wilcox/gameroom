@@ -35,8 +35,7 @@ const ErrorSnackbar: React.FC<IProps> = (props: IProps) => {
         severity={'error'}
         variant={'filled'}
       >
-        {/* {message} */}
-        message
+        {message}
       </Alert>
     </Snackbar>
   );

@@ -79,6 +79,7 @@ const MFAForm: React.FC<IProps> = (props: IProps) => {
         name={'MFA Token'}
         value={MFAToken}
         onChange={event => setMFAToken(event.target.value)}
+        onKeyPress={event => event.key === 'Enter' ? handleSubmit() : null}
       />
       <StyledErrorText>
         {MFAError}

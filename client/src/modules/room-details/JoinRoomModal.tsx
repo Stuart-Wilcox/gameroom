@@ -26,7 +26,7 @@ interface IProps {
   joinRoom: (roomId: string) => void;
 }
 
-const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
+const JoinRoomModal: React.FC<IProps> = (props: IProps) => {
   const {
     roomId,
     roomName,
@@ -46,10 +46,11 @@ const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
   React.useEffect(() => {
     if (room) {
       // clear and close the modal
+      console.log('HERE', room);
+      onComplete(room);
       setImmediate(() => {
         onClose();
       });
-      onComplete(room);
     }
   }, [room]);
 
@@ -113,4 +114,4 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreateRoomModal);
+)(JoinRoomModal);

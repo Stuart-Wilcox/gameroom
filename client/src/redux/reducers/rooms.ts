@@ -47,9 +47,13 @@ export default function (state = initialState, action: any): IRoomsState {
     case RoomsActions.JOIN_ROOM:
       return joinRoom(state);
     case RoomsActions.JOIN_ROOM_SUCCESS:
-      return joinRoomSuccess(state, action.payload);
+      let y = joinRoomSuccess(state, action.payload);
+      console.log('success', y);
+      return y;
     case RoomsActions.JOIN_ROOM_FAILED:
-      return joinRoomFailed(state, action.payload);
+      let x = joinRoomFailed(state, action.payload);
+      console.log('failed', x);
+      return x;
     
     default:
       return state;
@@ -187,11 +191,10 @@ const joinRoom = (state: IRoomsState): IRoomsState => {
   };
 };
 const joinRoomSuccess = (state: IRoomsState, payload: any): IRoomsState => {
-  const data = payload.rooms;
+  const data = payload;
   return {
     ...state,
     joinRoom: {
-      ...state.joinRoom,
       data,
       isLoading: false,
       err: '',
@@ -203,7 +206,6 @@ const joinRoomFailed = (state: IRoomsState, payload: any): IRoomsState => {
   return {
     ...state,
     joinRoom: {
-      ...state.joinRoom,
       data: undefined,
       isLoading: false,
       err,

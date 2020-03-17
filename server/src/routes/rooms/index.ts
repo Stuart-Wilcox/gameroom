@@ -168,9 +168,12 @@ router.post('/:id/join', async (req, res) => {
   const user = req.user as any;
   const { id } = req.params;
 
-  const room = joinRoom(user._id, id);
-
-  return res.status(200).json({ room: 'Not complete' });
+  const { room, err } = await joinRoom(user._id, id);
+  if (room) {
+    return res.status(400).json({ err });
+  }
+  
+  return res.json({ room });
 });
 
 /**
@@ -184,9 +187,12 @@ router.post('/:id/leave', async (req, res) => {
   const user = req.user as any;
   const { id } = req.params;
 
-  const room = leaveRoom(user._id, id);
-
-  return res.status(200).json({ message: 'Not complete' });
+  const { room, err } = await leaveRoom(user._id, id);
+  if (err) {
+    return res.status(400).json({ err });
+  }
+  
+  return res.json({ room });
 });
 
 export default router;
