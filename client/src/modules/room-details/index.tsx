@@ -69,7 +69,7 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
     setJoinRoomModalOpen(false);
   };
 
-  console.log(currentUserIsJoined, User.get());
+  console.log(room);
   
   // show the users in this room, games history, etc
   // stats, create new game (which navigates to games page)
@@ -77,7 +77,12 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
     <StyledRoomDetailsPage>
       <RoomDetailsHeader
         name={room?.name}
+        isPrivate={room?.isPrivate}
+        invitedMembers={room?.invitedMembers}
+        currentMembers={room?.currentMembers}
         currentUserIsJoined={currentUserIsJoined}
+        onJoin={() => setJoinRoomModalOpen(true)}
+        onLeave={() => null}
       />
       <RoomDetailsBody />
       

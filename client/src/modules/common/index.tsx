@@ -1,4 +1,5 @@
 export { default as Alert } from './Alert';
+export { default as Avatar } from './Avatar';
 export { default as Button } from './Button';
 export { default as Checkbox } from './Checkbox';
 export { default as Dialog } from './Dialog';
@@ -12,3 +13,4 @@ export { default as Title } from './Title';
 
 export * from './Dialog';
 export * from './Table';
+export * from './Avatar';
