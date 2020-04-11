@@ -10,10 +10,6 @@ const RoomSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  isPrivate: {
-    type: Boolean,
-    default: false,
-  },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -44,7 +40,6 @@ interface IRoom extends mongoose.Document {
   id: string,
   created: Date,
   name: string,
-  isPrivate: boolean,
   creator: string,
   invitedMembers: string[],
   isActive: boolean,

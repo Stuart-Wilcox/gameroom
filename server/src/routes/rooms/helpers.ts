@@ -5,9 +5,8 @@ export const list = async (userId: string) => {
     .find({
       isActive: true,
     }).or([
-      { isPrivate: true, invitedMembers: userId },
-      { isPrivate: true, creator: userId },
-      { isPrivate: false },
+      { invitedMembers: userId },
+      { creator: userId },
     ]).sort(
       'created'
     ).populate(
@@ -15,10 +14,9 @@ export const list = async (userId: string) => {
     );
 };
 
-export const create = async (creator: string, name: string, isPrivate: boolean) => {
+export const create = async (creator: string, name: string) => {
   const newRoom = new Room({
     name,
-    isPrivate,
     creator,
     isActive: true,
     invitedMembers: [],
@@ -43,9 +41,8 @@ export const retrieve = async (userId: string, _id: string) => {
       _id,
       isActive: true,
     }).or([
-      { isPrivate: true, invitedMembers: userId },
-      { isPrivate: true, creator: userId },
-      { isPrivate: false },
+      { invitedMembers: userId },
+      { creator: userId },
     ]).populate(
       'creator'
     ).populate(
@@ -55,7 +52,7 @@ export const retrieve = async (userId: string, _id: string) => {
     );
 };
 
-export const update = async (creator: string, _id: string, name?: string, isPrivate?: boolean) => {
+export const update = async (creator: string, _id: string, name?: string) => {
   const room = await Room.findOne({ _id, creator });
   if (!room) {
     return undefined;
@@ -65,55 +62,56 @@ export const update = async (creator: string, _id: string, name?: string, isPriv
   if (!!name) {
     room.name = name;
   }
-  // can be 'false' but not undefined
-  if (isPrivate !== undefined) {
-    room.isPrivate = isPrivate;
+
+  return room.save();
+};
+
+export const inviteMembers = async (creator: string, _id: string, users: string[]) => {
+  const room = await Room.findOne({ _id, creator });
+  if (!room) {
+    return undefined;
+  }
+
+  for (const userId in users) {
+    // check if user is already invited
+    if (room.invitedMembers.includes(userId)) {
+      continue;
+    }
+
+    // validate given user actually exists
+    const invitedUser = await User.findById(userId);
+    if (!invitedUser) {
+      continue;
+    }
+
+    // TODO put limit on number of members in a room here!
+    room.invitedMembers = [...room.invitedMembers, userId];
   }
 
   return room.save();
 };
 
-export const inviteMember = async (creator: string, _id: string, userId: string) => {
-  const room = await Room.findOne({ _id, creator, isPrivate: true });
+export const uninviteMembers = async (creator: string, _id: string, users: string[]) => {
+  const room = await Room.findOne({ _id, creator });
   if (!room) {
     return undefined;
   }
 
-  // check if user is already invited
-  if (room.invitedMembers.includes(userId)) {
-    return room;
+  for (const userId in users) {
+    // check if user has not already been invited
+    if (!room.invitedMembers.includes(userId)) {
+      continue;
+    }
+
+    // validate given user actualy exists
+    const uninvitedUser = await User.findById(userId);
+    if (!uninvitedUser) {
+      continue;
+    }
+
+    room.invitedMembers = room.invitedMembers.filter(member => member !== userId);
   }
-
-  // validate given user actually exists
-  const invitedUser = await User.findById(userId);
-  if (!invitedUser) {
-    return undefined;
-  }
-
-  // TODO put limit on number of members in a room here!
-
-  room.invitedMembers = [...room.invitedMembers, userId];
-  return room.save();
-};
-
-export const uninviteMember = async (creator: string, _id: string, userId: string) => {
-  const room = await Room.findOne({ _id, creator, isPrivate: true });
-  if (!room) {
-    return undefined;
-  }
-
-  // check if user has not already been invited
-  if (!room.invitedMembers.includes(userId)) {
-    return room;
-  }
-
-  // validate given user actualy exists
-  const uninvitedUser = await User.findById(userId);
-  if (!uninvitedUser) {
-    return undefined;
-  }
-
-  room.invitedMembers = room.invitedMembers.filter(member => member !== userId);
+  
   return room.save();
 };
 
@@ -122,9 +120,8 @@ export const joinRoom = async (userId: string, roomId: string) => {
     .findOne({ 
       _id: roomId
     }).or([
-      { isPrivate: true, invitedMembers: userId },
-      { isPrivate: true, creator: userId },
-      { isPrivate: false },
+      { invitedMembers: userId },
+      { creator: userId },
     ]);
 
     if (!room) {
@@ -176,9 +173,8 @@ export const leaveRoom = async (userId: string, roomId: string) => {
     .findOne({ 
       _id: roomId
     }).or([
-      { isPrivate: true, invitedMembers: userId },
-      { isPrivate: true, creator: userId },
-      { isPrivate: false },
+      { invitedMembers: userId },
+      { creator: userId },
     ]);
 
     if (!room) {

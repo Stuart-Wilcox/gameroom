@@ -6,8 +6,8 @@ import {
   remove,
   retrieve,
   update,
-  inviteMember,
-  uninviteMember,
+  inviteMembers,
+  uninviteMembers,
   joinRoom,
   leaveRoom,
 } from './helpers';
@@ -15,8 +15,7 @@ import {
 const router = Router();
 
 /**
- * Returns all rooms available to a user, which means all public rooms and all private rooms where the user has been invited
- */
+ * Returns the rooms available to the user, if any */
 router.get('/', async (req, res) => {
   const user = req.user as any;
   const rooms = await list(user._id);  
@@ -30,7 +29,6 @@ router.post('/', async (req, res) => {
   const user = req.user as any;
   const {
     name,
-    isPrivate,
   } = req.body;
 
   const err = await validate({ name });
@@ -38,7 +36,7 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ err });
   }
 
-  const room = await create(user._id, name, isPrivate);
+  const room = await create(user._id, name);
   return res.json({ room });
 });
 
@@ -91,7 +89,7 @@ router.put('/:id', async (req, res) => {
   }
 
   const { id } = req.params;
-  const { name, isPrivate } = req.body;
+  const { name } = req.body;
   const user = req.user as any;
 
   const err = await validate({ id });
@@ -99,7 +97,7 @@ router.put('/:id', async (req, res) => {
     return res.status(400).json({ err });
   }
 
-  const room = update(user._id, id, name, isPrivate);
+  const room = update(user._id, id, name);
   if (room) {
     return res.json({ room });
   }
@@ -110,51 +108,51 @@ router.put('/:id', async (req, res) => {
 /**
  * Invites a member to the room
  */
-router.put('/:id/inviteMember', async (req, res) => {
+router.put('/:id/inviteMembers', async (req, res) => {
   if (!req.user) {
     return res.status(400).json({ err: 'User not found' });
   }
 
   const { id } = req.params;
-  const { userId } = req.body;
+  const { users } = req.body;
   const user = req.user as any;
 
-  const err = await validate({ id, userId });
+  const err = await validate({ id, users });
   if (err) {
     return res.status(400).json({ err });
   }
 
-  const room = inviteMember(user._id, id, userId);
+  const room = inviteMembers(user._id, id, users);
   if (room) {
     return res.json({ room });
   }
 
-  return res.status(404).json({ err: `Room id ${id} or User ${userId} not found` });
+  return res.status(404).json({ err: `Room id ${id} or User in ${users} not found` });
 });
 
 /**
  * Uninvites a member from the group
  */
-router.put('/:id/uninviteMember', async (req, res) => {
+router.put('/:id/uninviteMembers', async (req, res) => {
   if (!req.user) {
     return res.status(400).json({ err: 'User not found' });
   }
 
   const { id } = req.params;
-  const { userId } = req.body;
+  const { users } = req.body;
   const user = req.user as any;
   
-  const err = await validate({ id, userId });
+  const err = await validate({ id, users });
   if (err) {
     return res.status(400).json({ err });
   }
 
-  const room = uninviteMember(user._id, id, userId);
+  const room = uninviteMembers(user._id, id, users);
   if (room) {
     return res.json({ room });
   }
 
-  return res.status(404).json({ err: `Room id ${id} or User ${id} not found` });
+  return res.status(404).json({ err: `Room id ${id} or User in ${users} not found` });
 });
 
 /**
