@@ -4,8 +4,8 @@ import {
   removeRoom as performRemoveRoom,
   retrieveRoom as performRetrieveRoom,
   updateRoom as performUpdateRoom,
-  inviteMemberToRoom as performInviteMemberToRoom,
-  uninviteMemberFromRoom as performUninviteMemberFromRoom,
+  inviteMembersToRoom as performInviteMembersToRoom,
+  uninviteMembersFromRoom as performUninviteMembersFromRoom,
   joinRoom as performJoinRoom,
   leaveRoom as performLeaveRoom,
 } from 'src/service';
@@ -30,13 +30,13 @@ export const UPDATE_ROOM = 'UPDATE_ROOM';
 export const UPDATE_ROOM_SUCCESS = 'UPDATE_ROOM_SUCCESS';
 export const UPDATE_ROOM_FAILED = 'UPDATE_ROOM_FAILED';
 
-export const INVITE_MEMBER_TO_ROOM = 'INVITE_MEMBER_TO_ROOM';
-export const INVITE_MEMBER_TO_ROOM_SUCCESS = 'INVITE_MEMBER_TO_ROOM_SUCCESS';
-export const INVITE_MEMBER_TO_ROOM_FAILED = 'INVITE_MEMBER_TO_ROOM_FAILED';
+export const INVITE_MEMBERS_TO_ROOM = 'INVITE_MEMBERS_TO_ROOM';
+export const INVITE_MEMBERS_TO_ROOM_SUCCESS = 'INVITE_MEMBERS_TO_ROOM_SUCCESS';
+export const INVITE_MEMBERS_TO_ROOM_FAILED = 'INVITE_MEMBERS_TO_ROOM_FAILED';
 
-export const UNINVITE_MEMBER_FROM_ROOM = 'UNINVITE_MEMBER_FROM_ROOM';
-export const UNINVITE_MEMBER_FROM_ROOM_SUCCESS = 'UNINVITE_MEMBER_FROM_ROOM_SUCCESS';
-export const UNINVITE_MEMBER_FROM_ROOM_FAILED = 'UNINVITE_MEMBER_FROM_ROOM_FAILED';
+export const UNINVITE_MEMBERS_FROM_ROOM = 'UNINVITE_MEMBERS_FROM_ROOM';
+export const UNINVITE_MEMBERS_FROM_ROOM_SUCCESS = 'UNINVITE_MEMBERS_FROM_ROOM_SUCCESS';
+export const UNINVITE_MEMBERS_FROM_ROOM_FAILED = 'UNINVITE_MEMBERS_FROM_ROOM_FAILED';
 
 export const JOIN_ROOM = 'JOIN_ROOM';
 export const JOIN_ROOM_SUCCESS = 'JOIN_ROOM_SUCCESS';
@@ -111,29 +111,29 @@ export const updateRoomFailed = (err: any) => ({
   payload: err,
 });
 
-export const inviteMemberToRoom = (id: string, userId: string) => ({
-  type: INVITE_MEMBER_TO_ROOM,
-  payload: { id, userId },
+export const inviteMembersToRoom = (id: string, users: string[]) => ({
+  type: INVITE_MEMBERS_TO_ROOM,
+  payload: { id, users },
 });
-export const inviteMemberToRoomSuccess = (response: any) => ({
-  type: INVITE_MEMBER_TO_ROOM_SUCCESS,
+export const inviteMembersToRoomSuccess = (response: any) => ({
+  type: INVITE_MEMBERS_TO_ROOM_SUCCESS,
   payload: response,
 });
-export const inviteMemberToRoomFailed = (err: any) => ({
-  type: INVITE_MEMBER_TO_ROOM_FAILED,
+export const inviteMembersToRoomFailed = (err: any) => ({
+  type: INVITE_MEMBERS_TO_ROOM_FAILED,
   payload: err,
 });
 
-export const uninviteMemberFromRoom = (id: string, userId: string) => ({
-  type: UNINVITE_MEMBER_FROM_ROOM,
-  payload: { id, userId },
+export const uninviteMembersFromRoom = (id: string, users: string[]) => ({
+  type: UNINVITE_MEMBERS_FROM_ROOM,
+  payload: { id, users },
 });
-export const uninviteMemberFromRoomSuccess = (response: any) => ({
-  type: UNINVITE_MEMBER_FROM_ROOM_SUCCESS,
+export const uninviteMembersFromRoomSuccess = (response: any) => ({
+  type: UNINVITE_MEMBERS_FROM_ROOM_SUCCESS,
   payload: response,
 });
-export const uninviteMemberFromRoomFailed = (err: any) => ({
-  type: UNINVITE_MEMBER_FROM_ROOM_FAILED,
+export const uninviteMembersFromRoomFailed = (err: any) => ({
+  type: UNINVITE_MEMBERS_FROM_ROOM_FAILED,
   payload: err,
 });
 
@@ -248,39 +248,39 @@ export const updateRoomThunk = (id: string, name?: string, isPrivate?: boolean) 
   }
 };
 
-export const inviteMemberToRoomThunk = (id: string, userId: string) => async (dispatch: React.Dispatch<any>) => {
-  dispatch(inviteMemberToRoom(id, userId));
+export const inviteMemberToRoomThunk = (id: string, users: string[]) => async (dispatch: React.Dispatch<any>) => {
+  dispatch(inviteMembersToRoom(id, users));
 
   try {
-    const response = await performInviteMemberToRoom(id, userId);
+    const response = await performInviteMembersToRoom(id, users);
     const { room, err } = response;
     if (err) {
-      dispatch(inviteMemberToRoomFailed(err));
+      dispatch(inviteMembersToRoomFailed(err));
     }
     else {
-      dispatch(inviteMemberToRoomSuccess(room));
+      dispatch(inviteMembersToRoomSuccess(room));
     }
   }
   catch (err) {
-    dispatch(inviteMemberToRoomFailed(err));
+    dispatch(inviteMembersToRoomFailed(err));
   }
 };
 
-export const uninviteMemberFromRoomThunk = (id: string, userId: string) => async (dispatch: React.Dispatch<any>) => {
-  dispatch(uninviteMemberFromRoom(id, userId));
+export const uninviteMemberFromRoomThunk = (id: string, users: string[]) => async (dispatch: React.Dispatch<any>) => {
+  dispatch(uninviteMembersFromRoom(id, users));
 
   try {
-    const response = await performUninviteMemberFromRoom(id, userId);
+    const response = await performUninviteMembersFromRoom(id, users);
     const { room, err } = response;
     if (err) {
-      dispatch(uninviteMemberFromRoomFailed(err));
+      dispatch(uninviteMembersFromRoomFailed(err));
     }
     else {
-      dispatch(uninviteMemberFromRoomSuccess(room));
+      dispatch(uninviteMembersFromRoomSuccess(room));
     }
   }
   catch (err) {
-    dispatch(uninviteMemberFromRoomFailed(err));
+    dispatch(uninviteMembersFromRoomFailed(err));
   }
 };
 

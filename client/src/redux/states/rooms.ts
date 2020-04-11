@@ -1,24 +1,33 @@
 import IAsyncData from './IAsyncData';
+import { SimpleUser } from './user';
 
 export default interface IState {
-  rooms: IAsyncData<Room>;
-  createRoom: IAsyncData<CreateRoom>;
-  joinRoom: IAsyncData<JoinRoom>;
-  room: IAsyncData<any>;
+  listRooms: IAsyncData<SimpleRoom[]>;
+  createRoom: IAsyncData<void>;
+  removeRoom: IAsyncData<void>;
+  retrieveRoom: IAsyncData<DetailedRoom>;
+  updateRoom: IAsyncData<void>;
+  inviteMembers: IAsyncData<void>;
+  uninviteMembers: IAsyncData<void>;
+  joinRoom: IAsyncData<void>;
+  leaveRoom: IAsyncData<void>;
 };
 
 
-export interface Room {
-  id: string;
+export interface SimpleRoom {
+  _id: string;
+  isActive: string,
   name: string;
-  creator: any;
+  creator: SimpleUser;
   created: string;
 };
 
-export interface CreateRoom {
+export interface DetailedRoom {
+  _id: string;
+  isActive: boolean;
+  invitedMembers: SimpleUser[];
+  currentMembers: SimpleUser[];
   name: string;
-};
-
-export interface JoinRoom {
-  id: string;
+  creator: SimpleUser;
+  created: string;
 };
