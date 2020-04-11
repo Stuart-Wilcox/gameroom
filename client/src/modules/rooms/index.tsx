@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { connect } from 'react-redux'
+import * as Redux from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import IState from 'src/redux/states';
@@ -20,24 +20,32 @@ import CreateRoomModal from './CreateRoomModal';
 import RoomsTable from './RoomsTable';
 
 interface IProps extends RouteComponentProps {
-  rooms?: any;
-  isLoading: boolean;
-  err?: string;
-  onListRooms: () => void;
 }
 
 const RoomsPage: React.FC<IProps> = (props: IProps) => {
   const {
     history,
-    rooms=[],
-    isLoading,
-    err='',
-    onListRooms,
   } = props;
+
+  const dispatch = Redux.useDispatch();
+
+  const {
+    isLoading,
+    data: rooms=[],
+    err='',
+  } = Redux.useSelector((state: IState) => {
+    return state.rooms.listRooms;
+  });
+
+  const {
+    data:currentUser
+  } = Redux.useSelector((state: IState) => {
+    return state.user.currentUser;
+  });
 
   // fetch rooms on mount
   React.useEffect(() => {
-    onListRooms();
+    dispatch(listRooms());
   }, []);
 
   const [createModalOpen, setCreateModalOpen] = React.useState<boolean>(false);
@@ -53,8 +61,9 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
     history.push(`/rooms/${room._id}`);
   };
 
+  const myRooms = rooms.filter((room: any) => room.creator._id === currentUser?._id);
+  const invitedRooms = rooms.filter((room: any) => room.creator._id !== currentUser?._id);
   
-
   return (
     <StyledRoomsPage>
       <StyledHeader>
@@ -70,19 +79,20 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
         </Button>
       </StyledHeader>
       <StyledBody>
-        {/* 
+        
         <StyledTableContainer>
           <h4>My Rooms</h4>
           <RoomsTable
-            rooms={rooms.filter((room: any) => room.creator === '1')}
+            rooms={myRooms}
             onCreateRoom={() => setCreateModalOpen(true)}
+            onSelectRoom={(room: any) => handleSelectRoom(room)}
           />
         </StyledTableContainer> 
-        */}
+       
         <StyledTableContainer>
-          <h4>All Rooms</h4>
+          <h4>Invited Rooms</h4>
           <RoomsTable
-            rooms={rooms}
+            rooms={invitedRooms}
             onCreateRoom={() => setCreateModalOpen(true)}
             onSelectRoom={(room: any) => handleSelectRoom(room)}
           />
@@ -104,19 +114,4 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
 
 
 const WithRouterRoomsPage = withRouter(RoomsPage);
-
-const mapStateToProps = (state: IState) => ({
-  rooms: state.rooms.rooms.data,
-  isLoading: state.rooms.rooms.isLoading,
-  err: state.rooms.rooms.err,
-});
-
-const mapDispatchToProps = (dispatch: React.Dispatch<any>) => ({
-  onListRooms: () => dispatch(listRooms()),
-});
-
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WithRouterRoomsPage);
+export default WithRouterRoomsPage;

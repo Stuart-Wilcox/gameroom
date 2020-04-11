@@ -168,7 +168,7 @@ export const listRoomsThunk = () => async (dispatch: React.Dispatch<any>) => {
   dispatch(listRooms());
 
   try {
-    const rooms = await performListRooms();
+    const { rooms } = await performListRooms();
     dispatch(listRoomsSuccess(rooms));
   }
   catch (err) {

@@ -402,7 +402,7 @@ const leaveRoomFailed = (state: IRoomsState, payload: string): IRoomsState => {
       data: undefined,
       isLoading: false,
       err,
-    }
+    },
   };
 };
 

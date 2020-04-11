@@ -11,11 +11,11 @@ export const fetchUser = () => ({
   type: FETCH_USER,
 });
 export const fetchUserSuccess = (user: any) => ({
-  type: FETCH_USER,
+  type: FETCH_USER_SUCCESS,
   payload: user,
 });
 export const fetchUserFailed = (err: any) => ({
-  type: FETCH_USER,
+  type: FETCH_USER_FAILED,
   payload: err,
 });
 
@@ -23,7 +23,7 @@ export const fetchUserThunk = () => async (dispatch: React.Dispatch<any>) => {
   dispatch(fetchUser());
 
   try {
-    const user = await performRetrieveCurrentUser();
+    const { user } = await performRetrieveCurrentUser();
 
     dispatch(fetchUserSuccess(user));
   }

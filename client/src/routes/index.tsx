@@ -1,5 +1,8 @@
 import * as React from 'react';
+import * as Redux from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+import { retrieveCurrentUser } from 'src/redux/actions';
 
 import LoginPage from 'src/modules/login';
 import HomePage from 'src/modules/home';
@@ -9,6 +12,12 @@ import GamesPage from 'src/modules/games';
 import GameDetailsPage from 'src/modules/game-details';
 
 const Routes: React.FC = () => {
+  // fetch user on mount
+  const dispatch = Redux.useDispatch();
+  React.useEffect(() => {
+    dispatch(retrieveCurrentUser());
+  });
+
   return (
     <Router>
       <Switch>

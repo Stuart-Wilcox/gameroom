@@ -36,7 +36,6 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
     onRetrieveRoom,    
   } = props;
   
-  
   const [joinRoomModalOpen, setJoinRoomModalOpen] = React.useState<boolean>(false);
   const [joinRoom, setJoinRoom] = React.useState<any>({});
   const [displayError, setDisplayError] = React.useState<string>('');
@@ -63,13 +62,11 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
 
   const handleJoinRoomComplete = (room: any) => {
   };
-
+  
   const handleJoinRoomModalClose = () => {
     setJoinRoom({});
     setJoinRoomModalOpen(false);
   };
-
-  console.log(room);
   
   // show the users in this room, games history, etc
   // stats, create new game (which navigates to games page)
@@ -104,9 +101,9 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
 const WithRouterRoomDetails = withRouter(RoomDetails);
 
 const mapStateToProps = (state: IState) => ({
-  room: state.rooms.room.data,
-  isLoading: state.rooms.room.isLoading,
-  err: state.rooms.room.err,
+  room: state.rooms.retrieveRoom.data,
+  isLoading: state.rooms.retrieveRoom.isLoading,
+  err: state.rooms.retrieveRoom.err,
 });
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>) => ({
