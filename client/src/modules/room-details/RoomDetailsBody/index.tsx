@@ -13,15 +13,23 @@ import {
 } from '@material-ui/core';
 
 interface IProps {
-  
+  isActive?: boolean;
 }
 
 const RoomDetailsBody: React.FC<IProps> = (props: IProps) => {
   const {
-    
+    isActive,
   } = props;
 
   const [tab, setTab] = React.useState<number>(0);
+
+  if (!isActive) {
+    return (
+      <StyledRoomDetailsBody>
+        This room is currently inactive. To make it active, at least one user must join it.
+      </StyledRoomDetailsBody>
+    );
+  }
   
   return (
     <StyledRoomDetailsBody>

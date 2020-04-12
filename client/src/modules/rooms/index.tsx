@@ -4,6 +4,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import IState from 'src/redux/states';
 import { listRooms } from 'src/redux/actions';
+import { retrieveCurrentUser } from 'src/redux/actions';
 
 import { 
   StyledRoomsPage,
@@ -37,15 +38,16 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
     return state.rooms.listRooms;
   });
 
-  const {
-    data:currentUser
-  } = Redux.useSelector((state: IState) => {
-    return state.user.currentUser;
+  const currentUser = Redux.useSelector((state: IState) => {
+    return state.user.currentUser.data;
   });
 
-  // fetch rooms on mount
+  console.log('here', currentUser)
+
+  // fetch rooms and current user on mount
   React.useEffect(() => {
     dispatch(listRooms());
+    dispatch(retrieveCurrentUser())
   }, []);
 
   const [createModalOpen, setCreateModalOpen] = React.useState<boolean>(false);

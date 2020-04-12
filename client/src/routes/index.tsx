@@ -10,13 +10,19 @@ import RoomsPage from 'src/modules/rooms';
 import RoomDetailsPage from 'src/modules/room-details';
 import GamesPage from 'src/modules/games';
 import GameDetailsPage from 'src/modules/game-details';
+import IState from 'src/redux/states';
 
 const Routes: React.FC = () => {
-  // fetch user on mount
+  // fetch user once logged in
   const dispatch = Redux.useDispatch();
-  React.useEffect(() => {
-    dispatch(retrieveCurrentUser());
+  const message = Redux.useSelector((state: IState) => {
+    return state.mfa.message;
   });
+  React.useEffect(() => {
+    if (message) {
+      dispatch(retrieveCurrentUser());
+    }
+  }, [message]);
 
   return (
     <Router>
@@ -35,7 +41,7 @@ const Routes: React.FC = () => {
         </Route>
         <Route path='/games/:id' exact={true}>
           <GameDetailsPage />
-        </Route>
+        </Route> 
         <Route path='/'>
           <HomePage />
         </Route>

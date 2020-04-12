@@ -3,7 +3,6 @@ import { Room, User } from '../../models';
 export const list = async (userId: string) => {
    return Room
     .find({
-      isActive: true,
     }).or([
       { invitedMembers: userId },
       { creator: userId },
@@ -18,7 +17,7 @@ export const create = async (creator: string, name: string) => {
   const newRoom = new Room({
     name,
     creator,
-    isActive: true,
+    isActive: false,
     invitedMembers: [],
     currentMembers: [],
   });
@@ -39,7 +38,6 @@ export const retrieve = async (userId: string, _id: string) => {
   return Room
     .findOne({
       _id,
-      isActive: true,
     }).or([
       { invitedMembers: userId },
       { creator: userId },
@@ -160,6 +158,8 @@ export const joinRoom = async (userId: string, roomId: string) => {
 
   // add user to room
   room.currentMembers = [...room.currentMembers, userId];
+  // activate room
+  room.isActive = true; 
   
   await user.save();
   return {
@@ -206,6 +206,10 @@ export const leaveRoom = async (userId: string, roomId: string) => {
 
   // remove user from room
   room.currentMembers = room.currentMembers.filter(member => member !== userId);
+  // deactivate room
+  if (room.currentMembers.length === 0) {
+    room.isActive = false;
+  }
 
   await user.save();
   return {
