@@ -59,9 +59,9 @@ export const listRoomsFailed = (err: any) => ({
   payload: err,
 });
 
-export const createRoom = (name: string, isPrivate: boolean) => ({
+export const createRoom = (name: string) => ({
   type: CREATE_ROOM,
-  payload: { name, isPrivate },
+  payload: { name },
 });
 export const createRoomSuccess = (response: any) => ({
   type: CREATE_ROOM_SUCCESS,
@@ -176,11 +176,11 @@ export const listRoomsThunk = () => async (dispatch: React.Dispatch<any>) => {
   }
 };
 
-export const createRoomThunk = (name: string, isPrivate: boolean) => async (dispatch: React.Dispatch<any>) => {
-  dispatch(createRoom(name, isPrivate));
+export const createRoomThunk = (name: string) => async (dispatch: React.Dispatch<any>) => {
+  dispatch(createRoom(name));
 
   try {
-    const response = await performCreateRoom(name, isPrivate);
+    const response = await performCreateRoom(name);
     const { room, err } = response;
     if (err) {
       dispatch(createRoomFailed(err));

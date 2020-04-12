@@ -7,7 +7,6 @@ import { createRoom as performCreateRoom } from 'src/redux/actions';
 import { FormControlLabel } from '@material-ui/core';
 import {
   Button,
-  Checkbox,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -24,7 +23,7 @@ interface IProps {
   room: any;
   isLoading: boolean;
   err: string;
-  createRoom: (name: string, isPrivate: boolean) => void;
+  createRoom: (name: string) => void;
 }
 
 const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
@@ -41,11 +40,9 @@ const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
   } = props;
 
   const [name, setName] = React.useState<string>('');
-  const [isPrivate, setIsPrivate] = React.useState<boolean>(false);
 
   const clear = () => {
     setName('');
-    setIsPrivate(false);
   };
 
   const validate = () => {
@@ -95,24 +92,6 @@ const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
           value={name}
           onChange={event => setName(event.target.value)}
         />
-        <FormControlLabel
-          control={
-            <Checkbox
-              color={'primary'}
-              checked={isPrivate}
-              disabled={isLoading}
-              onChange={event => setIsPrivate(event.target.checked)}
-            />
-          }
-          label={'Private'}
-          
-        />
-        {
-          isPrivate &&
-          <div style={{ fontSize:'14px',color:'rgba(0,0,0,0.8)' }}>
-            *Private rooms will require you to invite other users to access later.
-          </div>
-        }
       </DialogContent>
       <DialogActions>
         <Button
@@ -125,7 +104,7 @@ const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
           variant={'contained'}
           color={'primary'}
           disabled={!validate() || isLoading}
-          onClick={() => createRoom(name, isPrivate)}
+          onClick={() => createRoom(name)}
         >
           Create Room
         </Button>
@@ -142,7 +121,7 @@ const mapStateToProps = (state: IState) => ({
 });
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>) => ({
-  createRoom: (name: string, isPrivate: boolean) => dispatch(performCreateRoom(name, isPrivate))
+  createRoom: (name: string) => dispatch(performCreateRoom(name))
 });
 
 

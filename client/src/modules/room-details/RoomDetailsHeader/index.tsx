@@ -17,13 +17,14 @@ import {
   Title,
 } from '../../common';
 import UsersDisplay from './UsersDisplay';
+import { SimpleUser } from 'src/redux/states/user';
 
 interface IProps {
-  name: string;
-  isPrivate: boolean;
-  invitedMembers: any[];
-  currentMembers: any[];
-  currentUserIsJoined: boolean;
+  name?: string;
+  isActive?: boolean;
+  invitedMembers?: SimpleUser[];
+  currentMembers?: SimpleUser[];
+  currentUserIsJoined?: boolean;
   onJoin: () => void;
   onLeave: () => void;
 }
@@ -31,7 +32,7 @@ interface IProps {
 const RoomDetailsHeader: React.FC<IProps> = (props: IProps) => {
   const {
     name,
-    isPrivate,
+    isActive,
     invitedMembers,
     currentMembers,
     currentUserIsJoined,
@@ -57,15 +58,15 @@ const RoomDetailsHeader: React.FC<IProps> = (props: IProps) => {
           <Title>
             { name }
           </Title>
-          <Tooltip title={`This room is ${ isPrivate ? 'private' : 'public' }`}>
+          <Tooltip title={`This room is ${ isActive ? 'active' : 'not active' }`}>
             {
-              isPrivate ?
+              isActive ?
               (
-                <Lock fontSize={'small'}/>
+                <LockOpen fontSize={'small'}/>
               )
               :
               (
-                <LockOpen fontSize={'small'} />
+                <Lock fontSize={'small'} />
               )
             }
           </Tooltip>
@@ -76,7 +77,7 @@ const RoomDetailsHeader: React.FC<IProps> = (props: IProps) => {
       </StyledRoomDetailsTopBar>
       <StyledRoomDetailsBottomBar>
         <UsersDisplay 
-          isPrivate={isPrivate}
+          isActive={isActive}
           invitedMembers={invitedMembers}
           currentMembers={currentMembers}
         />

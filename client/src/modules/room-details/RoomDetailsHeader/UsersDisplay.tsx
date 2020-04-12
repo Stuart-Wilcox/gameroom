@@ -7,83 +7,51 @@ import {
   Avatar,
   AvatarGroup,
 } from 'src/modules/common'
+import { SimpleUser } from 'src/redux/states/user';
 
 
 interface IProps {
-  isPrivate: boolean;
-  invitedMembers: any[];
-  currentMembers: any[];  
+  isActive?: boolean;
+  invitedMembers?: SimpleUser[];
+  currentMembers?: SimpleUser[];  
 }
 
 const UsersDisplay: React.FC<IProps> = (props: IProps) => {
   const {
-    isPrivate,
+    isActive,
     invitedMembers,
     currentMembers,
   } = props;
 
-  if (isPrivate) {
+  // inactive members
+  const currentMemberIds = new Set(currentMembers?.map(user => user._id))
+  const inactiveMembers = invitedMembers?.filter(user => !currentMemberIds.has(user._id));
+
+  if (isActive) {
     return (
       <StyledUsersDisplay>
-        <PrivateUsersDisplay 
-          invitedMembers={invitedMembers}
-          currentMembers={currentMembers}
-        />
+        <AvatarGroup spacing={'medium'}>
+          {
+            currentMembers?.map(member => (
+              <Avatar key={member._id}>
+                {/* TODO put in user picture */}
+                {member.username} 
+              </Avatar>
+            ))
+          }
+          {
+            inactiveMembers?.map(member => {
+              <Avatar key={member._id}>
+                {'INACTIVE ' + member.username}
+              </Avatar>
+            })
+          }
+        </AvatarGroup>
       </StyledUsersDisplay>
     );
   }
 
-  return (
-    <StyledUsersDisplay>
-      <PublicUsersDisplay
-        currentMembers={currentMembers}
-      />
-    </StyledUsersDisplay>
-  );
+  return <></>;
 };
 
 export default UsersDisplay;
-
-
-interface IPrivateProps {
-  invitedMembers: any[];
-  currentMembers: any[];
-};
-const PrivateUsersDisplay: React.FC<IPrivateProps> = (props: IPrivateProps) => {
-  const {
-    invitedMembers,
-    currentMembers,
-  } = props;
-  
-  return (
-    <StyledUsersDisplay>
-      Content
-    </StyledUsersDisplay>
-  );
-};
-
-
-interface IPublicProps {
-  currentMembers: any[];
-};
-const PublicUsersDisplay: React.FC<IPublicProps> = (props: IPublicProps) => {
-  const {
-    currentMembers,
-  } = props;
-  
-  console.log(currentMembers);
-  return (
-    <StyledUsersDisplay>
-      <AvatarGroup spacing={'medium'}>
-        {
-          currentMembers?.map(member => (
-            <Avatar key={member._id}>
-              {/* TODO put in user picture */}
-              {member.username} 
-            </Avatar>
-          ))
-        }
-      </AvatarGroup>
-    </StyledUsersDisplay>
-  );
-};

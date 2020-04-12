@@ -6,9 +6,9 @@ export const listRooms = async () => {
   return sendRequest(url, 'GET');
 };
 
-export const createRoom = async (name: string, isPrivate: boolean) => {
+export const createRoom = async (name: string) => {
   const url = `${baseURL}/api/rooms/`;
-  const body = { name, isPrivate };
+  const body = { name };
   return sendRequest(url, 'POST', body);
 };
 

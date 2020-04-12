@@ -1,8 +1,15 @@
 import * as React from 'react';
+import * as Redux from 'react-redux';
 import { connect } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import IState from 'src/redux/states';
+import {
+  DetailedRoom, SimpleRoom,
+} from 'src/redux/states/rooms';
+import {
+  SimpleUser,
+} from 'src/redux/states/user';
 import { retrieveRoom } from 'src/redux/actions';
 
 import { User } from '../../utils';
@@ -18,10 +25,11 @@ import {
 import RoomDetailsHeader from './RoomDetailsHeader';
 import RoomDetailsBody from './RoomDetailsBody';
 import JoinRoomModal from './JoinRoomModal';
+import LeaveRoomModal from './LeaveRoomModal';
 
 
 interface IProps extends RouteComponentProps {
-  room?: any;
+  room?: DetailedRoom;
   isLoading: boolean;
   err?: string;
   onRetrieveRoom: (id: string) => void;
@@ -37,16 +45,19 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
   } = props;
   
   const [joinRoomModalOpen, setJoinRoomModalOpen] = React.useState<boolean>(false);
-  const [joinRoom, setJoinRoom] = React.useState<any>({});
+  const [leaveRoomModalOpen, setLeaveRoomModalOpen] = React.useState<boolean>(false);
   const [displayError, setDisplayError] = React.useState<string>('');
+
+  const user = Redux.useSelector((state: IState) => {
+    return state.user.currentUser.data;
+  });
 
   const currentUserIsJoined = React.useMemo(() => {
     if (room) {
-      const user = User.get();
-      return room.currentMembers.some((member: any) => member._id === user._id);
+      return room.currentMembers.some((member: any) => member._id === user?._id);
     }
     return false;
-  }, [room]);
+  }, [room, user]);
   
   // fetch room on mount
   React.useEffect(() => {
@@ -60,12 +71,18 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
     }
   }, [err]);
 
-  const handleJoinRoomComplete = (room: any) => {
+  const handleJoinRoomComplete = (room: SimpleRoom) => {
   };
-  
+
+  const handleLeaveRoomComplete = (room: SimpleRoom) => {
+  };
+
   const handleJoinRoomModalClose = () => {
-    setJoinRoom({});
     setJoinRoomModalOpen(false);
+  };
+
+  const handleLeaveRoomModalClose = () => {
+    setLeaveRoomModalOpen(false);
   };
   
   // show the users in this room, games history, etc
@@ -74,21 +91,28 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
     <StyledRoomDetailsPage>
       <RoomDetailsHeader
         name={room?.name}
-        isPrivate={room?.isPrivate}
         invitedMembers={room?.invitedMembers}
         currentMembers={room?.currentMembers}
         currentUserIsJoined={currentUserIsJoined}
         onJoin={() => setJoinRoomModalOpen(true)}
-        onLeave={() => null}
+        onLeave={() => setLeaveRoomModalOpen(true)}
       />
       <RoomDetailsBody />
       
       <JoinRoomModal
-        roomId={joinRoom._id}
-        roomName={joinRoom.name}
+        roomId={room?._id || ''}
+        roomName={room?.name}
         open={joinRoomModalOpen}
         onClose={() => handleJoinRoomModalClose()}
-        onComplete={(room) => handleJoinRoomComplete(room)}
+        onComplete={(room: SimpleRoom) => handleJoinRoomComplete(room)}
+        onError={(err: string) => setDisplayError(err)}
+      />
+      <LeaveRoomModal
+        roomId={room?._id || ''}
+        roomName={room?.name}
+        open={leaveRoomModalOpen}
+        onClose={() => handleLeaveRoomModalClose()}
+        onComplete={(room: SimpleRoom) => handleLeaveRoomComplete(room)}
         onError={(err: string) => setDisplayError(err)}
       />
       <ErrorSnackbar

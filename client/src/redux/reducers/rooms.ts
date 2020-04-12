@@ -47,10 +47,10 @@ export default function (state = initialState, action: any): IRoomsState {
       console.warn(`REMOVE ROOM Not implemented`);
       return state;
     case RoomsActions.REMOVE_ROOM_SUCCESS:
-      console.warn(`REMOVE_RROM_SUCCESS not implemented`);
+      console.warn(`REMOVE_ROOM_SUCCESS not implemented`);
       return state;
     case RoomsActions.REMOVE_ROOM_FAILED:
-      console.warn(`REMOVE_RROM_FAILED not implemented`);
+      console.warn(`REMOVE_ROOM_FAILED not implemented`);
       return state;      
     
     case RoomsActions.RETRIEVE_ROOM:

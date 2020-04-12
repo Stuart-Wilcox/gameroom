@@ -1,3 +1,5 @@
+import { SimpleUser } from 'src/redux/states/user';
+
 export const validateEmail = (email: string): boolean => {
   const re = /\S+@\S+\.\S+/;
   return re.test(email);
@@ -23,7 +25,7 @@ export class Token {
 export class User extends StorageItem {
   private static storageItem: StorageItem = new StorageItem('user');;
 
-  static set(user: any) { this.storageItem.set(JSON.stringify(user)) }
-  static get() { return JSON.parse(this.storageItem.get() || ''); }
+  static set(user: SimpleUser) { this.storageItem.set(JSON.stringify(user)) }
+  static get(): SimpleUser { return JSON.parse(this.storageItem.get() || '') as SimpleUser; }
   static delete() { this.storageItem.delete(); } 
 };

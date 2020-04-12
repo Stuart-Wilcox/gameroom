@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux'
 
 import IState from 'src/redux/states';
-import { joinRoom as performJoinRoom } from 'src/redux/actions';
+import { leaveRoom as performLeaveRoom } from 'src/redux/actions';
 
 import {
   Button,
@@ -23,7 +23,7 @@ interface IProps {
   room: any;
   isLoading: boolean;
   err: string;
-  joinRoom: (roomId: string) => void;
+  leaveRoom: (roomId: string) => void;
 }
 
 const JoinRoomModal: React.FC<IProps> = (props: IProps) => {
@@ -38,7 +38,7 @@ const JoinRoomModal: React.FC<IProps> = (props: IProps) => {
     room,
     isLoading,
     err,
-    joinRoom,
+    leaveRoom,
   } = props;
 
 
@@ -76,8 +76,7 @@ const JoinRoomModal: React.FC<IProps> = (props: IProps) => {
     >
       <DialogTitle>Join Room</DialogTitle>
       <DialogContent>
-        Are you sure you would like to join the room {roomName}? 
-        By joining this room you will be removed from any other rooms.
+        Are you sure you would like to leave the room {roomName}? 
       </DialogContent>
       <DialogActions>
         <Button
@@ -90,9 +89,9 @@ const JoinRoomModal: React.FC<IProps> = (props: IProps) => {
           variant={'contained'}
           color={'primary'}
           disabled={isLoading}
-          onClick={() => joinRoom(roomId)}
+          onClick={() => leaveRoom(roomId)}
         >
-          Join Room
+          Leave Room
         </Button>
       </DialogActions>
     </Dialog>
@@ -101,13 +100,13 @@ const JoinRoomModal: React.FC<IProps> = (props: IProps) => {
 
 
 const mapStateToProps = (state: IState) => ({
-  room: state.rooms.joinRoom.data,
-  isLoading: state.rooms.joinRoom.isLoading,
-  err: state.rooms.joinRoom.err,
+  room: state.rooms.leaveRoom.data,
+  isLoading: state.rooms.leaveRoom.isLoading,
+  err: state.rooms.leaveRoom.err,
 });
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>) => ({
-  joinRoom: (roomId: string) => dispatch(performJoinRoom(roomId))
+  leaveRoom: (roomId: string) => dispatch(performLeaveRoom(roomId))
 });
 
 
