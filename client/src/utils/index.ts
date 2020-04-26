@@ -5,6 +5,18 @@ export const validateEmail = (email: string): boolean => {
   return re.test(email);
 };
 
+export const formatDate = (date: Date | string) => {
+  if (typeof(date) === 'string') {
+    date = new Date(date);
+  }
+
+  if (isNaN(date.getTime())) {
+    return ''; // invalid date
+  }
+
+  return date.toLocaleDateString();
+};
+
 class StorageItem {
   key: string;
   constructor(key: string) { this.key = key; }

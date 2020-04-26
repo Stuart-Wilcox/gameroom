@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { formatDate } from 'src/utils';
 import {
   Paper,
   Table,
@@ -63,7 +64,7 @@ const RoomsTable: React.FC<IProps> = (props: IProps) => {
               >
                 <TableCell>{room.name}</TableCell>
                 <TableCell>{room.creator.username}</TableCell>
-                <TableCell>{room.created}</TableCell>
+                <TableCell>{formatDate(room.created)}</TableCell>
               </TableRow>
             ))
           }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, RouteProps, Redirect } from 'react-router-dom';
 
 import { retrieveCurrentUser } from 'src/redux/actions';
 
@@ -12,42 +12,63 @@ import GamesPage from 'src/modules/games';
 import GameDetailsPage from 'src/modules/game-details';
 import IState from 'src/redux/states';
 
-const Routes: React.FC = () => {
-  // fetch user once logged in
-  const dispatch = Redux.useDispatch();
-  const message = Redux.useSelector((state: IState) => {
-    return state.mfa.message;
-  });
-  React.useEffect(() => {
-    if (message) {
-      dispatch(retrieveCurrentUser());
-    }
-  }, [message]);
+import Navbar from 'src/modules/common/Navbar';
 
+const Routes: React.FC = () => {
   return (
     <Router>
       <Switch>
-        <Route path='/login' exact={true}>
+        <PublicRoute path='/login' exact={true}>
           <LoginPage />
-        </Route>
-        <Route path='/rooms' exact={true}>
+        </PublicRoute>
+        <PrivateRoute path='/rooms' exact={true}>
           <RoomsPage />
-        </Route>
-        <Route path='/rooms/:id' exact={true}>
+        </PrivateRoute>
+        <PrivateRoute path='/rooms/:id' exact={true}>
           <RoomDetailsPage />
-        </Route>
-        <Route path='/games' exact={true}>
+        </PrivateRoute>
+        <PrivateRoute path='/games' exact={true}>
           <GamesPage />
-        </Route>
-        <Route path='/games/:id' exact={true}>
+        </PrivateRoute>
+        <PrivateRoute path='/games/:id' exact={true}>
           <GameDetailsPage />
-        </Route> 
-        <Route path='/'>
-          <HomePage />
-        </Route>
+        </PrivateRoute> 
+        <PublicRoute path='/'>
+          {/* TODO make home page */}
+          {/* <HomePage /> */}  
+          <Redirect to={'/login'}/>
+        </PublicRoute>
       </Switch>
     </Router>
   );
 }
+
+export const PublicRoute: React.FC<RouteProps> = (props: RouteProps) => {
+  return (
+    <Route
+      {...props}
+    />
+  );
+};
+
+export const PrivateRoute: React.FC<RouteProps> = (props: RouteProps) => {
+  // fetch user once logged in
+  const dispatch = Redux.useDispatch();
+
+  // fetch current user on mount
+  React.useEffect(() => {
+    dispatch(retrieveCurrentUser());
+  });
+
+
+  return (
+    <>
+      <Navbar />
+      <Route
+        {...props}
+      />
+    </>
+  )
+};
 
 export default Routes;

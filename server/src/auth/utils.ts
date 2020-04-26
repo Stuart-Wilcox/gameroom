@@ -1,3 +1,5 @@
+import * as config from '../config';
+
 /**
  * Gets minutes to live into the future
  * @param ttl Minutes to live
@@ -10,8 +12,19 @@ const getExpiration = (offsetTimeMinutes: number) => {
 };
 
 const generateMFAToken = () => {
+  let value = '';
+  if (config.USE_REAL_MFA) {
+    for (let i = 0; i < config.MFA_TOKEN_DIGITS; i++) {
+      // add random digit between 0-9
+      value += `${Math.floor(10 * Math.random())}`
+    }
+  }
+  else {
+    value = '1234';
+  }
+
   return {
-    value: '1234',
+    value,
     expires: getExpiration(5),
   };
 };

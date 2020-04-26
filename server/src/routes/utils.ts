@@ -33,3 +33,7 @@ export const validate = async (fields: Object): Promise<string|undefined> => {
   }
   return;
 }
+
+export const equalIds = (a: string | object, b: string | object): boolean => {
+  return new String(a).valueOf() === new String(b).valueOf();
+};

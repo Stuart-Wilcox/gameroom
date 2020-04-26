@@ -42,8 +42,6 @@ const RoomsPage: React.FC<IProps> = (props: IProps) => {
     return state.user.currentUser.data;
   });
 
-  console.log('here', currentUser)
-
   // fetch rooms and current user on mount
   React.useEffect(() => {
     dispatch(listRooms());

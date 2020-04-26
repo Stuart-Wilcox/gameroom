@@ -1,4 +1,5 @@
 import { Room, User } from '../../models';
+import { equalIds } from '../utils';
 
 export const list = async (userId: string) => {
    return Room
@@ -86,7 +87,8 @@ export const inviteMembers = async (creator: string, _id: string, users: string[
     room.invitedMembers = [...room.invitedMembers, userId];
   }
 
-  return room.save();
+  await room.save();
+  return retrieve(creator, room._id); 
 };
 
 export const uninviteMembers = async (creator: string, _id: string, users: string[]) => {
@@ -107,10 +109,11 @@ export const uninviteMembers = async (creator: string, _id: string, users: strin
       continue;
     }
 
-    room.invitedMembers = room.invitedMembers.filter(member => member !== userId);
+    room.invitedMembers = room.invitedMembers.filter(member => !equalIds(member, userId));
   }
   
-  return room.save();
+  await room.save();
+  return retrieve(creator, room._id); 
 };
 
 export const joinRoom = async (userId: string, roomId: string) => {
@@ -162,8 +165,9 @@ export const joinRoom = async (userId: string, roomId: string) => {
   room.isActive = true; 
   
   await user.save();
+  await room.save();
   return {
-    room: await room.save(),
+    room: await retrieve(userId, room._id),
     err: undefined,
   };
 };
@@ -177,20 +181,20 @@ export const leaveRoom = async (userId: string, roomId: string) => {
       { creator: userId },
     ]);
 
-    if (!room) {
-      return {
-        room: undefined,
-        err: 'Room not found',
-      };
-    }
+  if (!room) {
+    return {
+      room: undefined,
+      err: 'Room not found',
+    };
+  }
 
-    // check if user has already joined
-    if (room.currentMembers.includes(userId)) {
-      return {
-        room,
-        err: 'Not already joined',
-      };
-    }
+  // check if user has already joined
+  if (!room.currentMembers.includes(userId)) {
+    return {
+      room,
+      err: 'Not already joined',
+    };
+  }
 
   // validate given user actualy exists
   const user = await User.findById(userId);
@@ -204,16 +208,18 @@ export const leaveRoom = async (userId: string, roomId: string) => {
   // re-assign user room
   user.currentRoom = null;
 
-  // remove user from room
-  room.currentMembers = room.currentMembers.filter(member => member !== userId);
+  // remove user from room  
+  room.currentMembers = room.currentMembers.filter(member => !equalIds(member, userId));
   // deactivate room
   if (room.currentMembers.length === 0) {
     room.isActive = false;
   }
 
   await user.save();
+  await room.save();
+
   return {
-    room: await room.save(),
+    room: await retrieve(userId, room._id),
     err: undefined,
   };
 };

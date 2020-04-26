@@ -3,13 +3,14 @@ import * as BodyParser from 'body-parser';
 import * as CookieParser from 'cookie-parser';
 import Routes from './routes';
 import { Session, Authenticate, Authorize } from './auth';
+import * as config from './config';
 
 const app = Express();
 
 // enable CORS in development
 if (!process.env.PRODUCTION) {
   app.use((req, res, next) => {
-    res.set('Access-Control-Allow-Origin', 'http://localhost:8082');
+    res.set('Access-Control-Allow-Origin', config.DEV_FRONTEND_URL);
     res.set('Access-Control-Allow-Methods', '*');
     res.set('Access-Control-Allow-Headers', 'authorization, content-type');
     res.set('Access-Control-Allow-Credentials', 'true');

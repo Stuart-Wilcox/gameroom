@@ -44,14 +44,14 @@ const JoinRoomModal: React.FC<IProps> = (props: IProps) => {
 
   // send complete if detected
   React.useEffect(() => {
-    if (room) {
+    if (!isLoading && !err) {
       // clear and close the modal
       onComplete(room);
       setImmediate(() => {
         onClose();
       });
     }
-  }, [room]);
+  }, [isLoading]);
 
   // send error if detected
   React.useEffect(() => {

@@ -343,6 +343,8 @@ const joinRoom = (state: IRoomsState): IRoomsState => {
 };
 const joinRoomSuccess = (state: IRoomsState, payload: DetailedRoom): IRoomsState => {
   const data = payload;
+  console.log(data);
+
   return {
     ...state,
     joinRoom: {

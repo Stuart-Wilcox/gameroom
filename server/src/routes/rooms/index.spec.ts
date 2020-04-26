@@ -4,8 +4,8 @@ import {
   remove,
   retrieve,
   update,
-  inviteMember,
-  uninviteMember,
+  inviteMembers,
+  uninviteMembers,
 } from './helpers';
 
 // TODO testing things in ./helpers

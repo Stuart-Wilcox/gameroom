@@ -7,4 +7,5 @@ export default interface IState {
 export interface SimpleUser {
   _id: string;
   username: string;
+  currentRoom: string;
 };

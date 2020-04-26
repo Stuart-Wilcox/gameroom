@@ -47,5 +47,5 @@ export const joinRoom = async (id: string) => {
 
 export const leaveRoom = async (id: string) => {
   const url = `${baseURL}/api/rooms/${id}/leave`;
-  return sendRequest(url, 'PUT');
+  return sendRequest(url, 'POST');
 };

@@ -167,7 +167,7 @@ router.post('/:id/join', async (req, res) => {
   const { id } = req.params;
 
   const { room, err } = await joinRoom(user._id, id);
-  if (room) {
+  if (err) {
     return res.status(400).json({ err });
   }
   

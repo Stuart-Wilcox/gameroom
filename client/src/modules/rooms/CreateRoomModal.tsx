@@ -51,7 +51,7 @@ const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
 
   // send complete if detected
   React.useEffect(() => {
-    if (room) {
+    if (!isLoading && !err) {
       // clear and close the modal
       setImmediate(() => {
         clear();
@@ -59,7 +59,7 @@ const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
       });
       onComplete(room);
     }
-  }, [room]);
+  }, [isLoading]);
 
   // send error if detected
   React.useEffect(() => {
@@ -90,7 +90,9 @@ const CreateRoomModal: React.FC<IProps> = (props: IProps) => {
           label={'Room Name'}
           placeholder={'Enter a name for the room'}
           value={name}
+          autoFocus={true}
           onChange={event => setName(event.target.value)}
+          onKeyPress={event => event.key === 'Enter' && validate() ? createRoom(name) : null}
         />
       </DialogContent>
       <DialogActions>
