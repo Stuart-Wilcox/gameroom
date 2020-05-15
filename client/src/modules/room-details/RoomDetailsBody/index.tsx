@@ -6,11 +6,15 @@ import {
 import {
   Paper,
   Title,
+  TabPanel,
 } from '../../common';
 import {
   Tabs,
   Tab,
 } from '@material-ui/core';
+import NewGame from './NewGame';
+import Leaderboards from './Leaderboards';
+import InvitePlayers from './InvitePlayers';
 
 interface IProps {
   isActive?: boolean;
@@ -21,7 +25,7 @@ const RoomDetailsBody: React.FC<IProps> = (props: IProps) => {
     isActive,
   } = props;
 
-  const [tab, setTab] = React.useState<number>(0);
+  const [tab, setTab] = React.useState<number>(2);
 
   if (!isActive) {
     return (
@@ -41,7 +45,26 @@ const RoomDetailsBody: React.FC<IProps> = (props: IProps) => {
         >
           <Tab label={'New Game'} />
           <Tab label={'Leaderboards'} />
+          <Tab label={'Invite Players'} />
         </Tabs>
+        <TabPanel
+          value={tab}
+          index={0}
+        > 
+          <NewGame />
+        </TabPanel>
+        <TabPanel
+          value={tab}
+          index={1}
+        > 
+          <Leaderboards />
+        </TabPanel>
+        <TabPanel
+          value={tab}
+          index={2}
+        > 
+          <InvitePlayers />
+        </TabPanel>
       </Paper>
     </StyledRoomDetailsBody>
   );

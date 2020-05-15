@@ -43,6 +43,7 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
     err,
     onRetrieveRoom,    
   } = props;
+  const roomId = (match.params as any)?.id;
   
   const [joinRoomModalOpen, setJoinRoomModalOpen] = React.useState<boolean>(false);
   const [leaveRoomModalOpen, setLeaveRoomModalOpen] = React.useState<boolean>(false);
@@ -61,9 +62,8 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
   
   // fetch room on mount
   React.useEffect(() => {
-    const roomId = (match.params as any)?.id;
     onRetrieveRoom(roomId);
-  }, []);
+  }, [roomId]);
 
   React.useEffect(() => {
     if (err) {
@@ -94,10 +94,13 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
         invitedMembers={room?.invitedMembers}
         currentMembers={room?.currentMembers}
         currentUserIsJoined={currentUserIsJoined}
+        isActive={room?.isActive}
         onJoin={() => setJoinRoomModalOpen(true)}
         onLeave={() => setLeaveRoomModalOpen(true)}
       />
-      <RoomDetailsBody />
+      <RoomDetailsBody
+        isActive={room?.isActive}
+      />
       
       <JoinRoomModal
         roomId={room?._id || ''}

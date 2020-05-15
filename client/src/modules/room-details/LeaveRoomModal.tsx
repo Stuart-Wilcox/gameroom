@@ -74,7 +74,7 @@ const JoinRoomModal: React.FC<IProps> = (props: IProps) => {
       open={open}
       onClose={() => handleClose()}
     >
-      <DialogTitle>Join Room</DialogTitle>
+      <DialogTitle>Leave Room</DialogTitle>
       <DialogContent>
         Are you sure you would like to leave the room {roomName}? 
       </DialogContent>
