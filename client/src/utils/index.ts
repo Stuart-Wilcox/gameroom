@@ -17,6 +17,40 @@ export const formatDate = (date: Date | string) => {
   return date.toLocaleDateString();
 };
 
+export const copyToClipboard = async (text: string): Promise<boolean> => {
+  try {
+    window.navigator.clipboard.writeText(text);
+    return true;
+  }
+  catch (error) {
+    return false;
+  }
+};
+
+export const debounce = (func: any, timeout: number) => {
+  let isCalled = false;
+  let delay: null | number = null;
+
+  // run only as often as timeout
+  const run = (...args: any) => {
+    if (!isCalled) {
+      isCalled = true;
+      func(...args);
+    }
+    
+    if (delay !== null) {
+      clearTimeout(delay);
+    }
+
+    delay = setTimeout(() => {
+      isCalled = false;
+      run();
+    }, timeout);
+  };
+
+  return run;
+};
+
 class StorageItem {
   key: string;
   constructor(key: string) { this.key = key; }

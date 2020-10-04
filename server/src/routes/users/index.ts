@@ -6,7 +6,10 @@ const router = Router();
 router.get('/', async (req, res) => {
   const user = req.user as any;
   const { username } = req.query;
-  const users = search(user._id, username);
+  const { users, err } = await search(user._id, username);
+  if (err) {
+    return res.status(400).json({ err });
+  }
   return res.json({ users });
 });
 

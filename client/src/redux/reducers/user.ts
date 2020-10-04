@@ -17,6 +17,7 @@ const initialAsyncData = <T extends unknown>(): IAsyncData<T> => ({
 
 const initialState: IUserState = {
     currentUser: initialAsyncData<SimpleUser>(),
+    userSearch: initialAsyncData<SimpleUser[]>(),
 };
 
 export default function (state = initialState, action: any): IUserState {
@@ -27,6 +28,12 @@ export default function (state = initialState, action: any): IUserState {
             return fetchUserSuccess(state, action.payload);
         case UserActions.FETCH_USER_FAILED:
             return fetchUserFailed(state, action.payload);
+        case UserActions.SEARCH_USERS:
+            return searchUsers(state);
+        case UserActions.SEARCH_USERS_SUCCESS:
+            return searchUsersSuccess(state, action.payload);
+        case UserActions.SEARCH_USERS_FAILED:
+            return searchUsersFailed(state, action.payload);
         default:
             return state;
     }
@@ -63,6 +70,39 @@ const fetchUserFailed = (state: IUserState, payload: string): IUserState => {
             isLoading: false,
             data: undefined,
             err,
+        }
+    };
+};
+
+const searchUsers = (state: IUserState): IUserState => {
+    return {
+        ...state,
+        userSearch: {
+            isLoading: true,
+            data: undefined,
+            err: '',
+        }
+    };
+};
+
+const searchUsersSuccess = (state: IUserState, payload: SimpleUser[]): IUserState => {
+    return {
+        ...state,
+        userSearch: {
+            isLoading: false,
+            data: payload,
+            err: '',
+        }
+    };
+};
+
+const searchUsersFailed = (state: IUserState, payload: string): IUserState => {
+    return {
+        ...state,
+        userSearch: {
+            isLoading: false,
+            data: undefined,
+            err: payload,
         }
     };
 };

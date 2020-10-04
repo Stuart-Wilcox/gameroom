@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
       username,
       email,
       mfaToken,
-      isActive: false,
+      isActive: true,
     });
   }
   else {
@@ -71,7 +71,7 @@ const options = {
 
 const verify = async (username: string, mfaToken: string, done: any) => {
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username, isActive: true });
     if (!user) {
       return done(null, false, { err: 'Incorrect username' });
     }
