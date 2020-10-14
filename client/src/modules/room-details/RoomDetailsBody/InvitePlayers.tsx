@@ -60,11 +60,12 @@ const InviteUsers: React.FC<IProps> = (props: IProps) => {
     const dispatch = useDispatch();
     const [searchValue, setSearchValue] = React.useState<string>('');
     const inviteLink = 'http://invite-link';
-    const invitedMemberMap = invitedMembers.reduce((acc, curr) => {
-        acc[curr] = true;
-    }, {} as any);
-
-    console.log(invitedMemberMap);
+    const invitedMemberMap = React.useMemo(() => {
+        return invitedMembers.reduce((acc, curr) => {
+            acc[curr] = true;
+            return acc;
+        }, {} as any)
+    }, [invitedMembers]);
 
     const handleCopyInviteLink = () => {
         copyToClipboard(inviteLink);
