@@ -29,13 +29,13 @@ export const updateRoom = async (id: string, name?: string, isPrivate?: boolean)
 };
 
 export const inviteMembersToRoom = async (roomId: string, users: string[]) => {
-  const url = `${baseURL}/api/rooms/${roomId}/inviteMember`;
+  const url = `${baseURL}/api/rooms/${roomId}/inviteMembers`;
   const body = { users };
   return sendRequest(url, 'PUT', body);
 };
 
 export const uninviteMembersFromRoom = async (roomId: string, users: string[]) => {
-  const url = `${baseURL}/api/rooms/${roomId}/uninviteMember`;
+  const url = `${baseURL}/api/rooms/${roomId}/uninviteMembers`;
   const body = { users };
   return sendRequest(url, 'PUT', body);
 };

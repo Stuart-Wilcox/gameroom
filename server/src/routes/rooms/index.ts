@@ -122,9 +122,14 @@ router.put('/:id/inviteMembers', async (req, res) => {
     return res.status(400).json({ err });
   }
 
-  const room = inviteMembers(user._id, id, users);
-  if (room) {
-    return res.json({ room });
+  try {
+    const room = await inviteMembers(user._id, id, users);
+    if (room) {
+      return res.json({ room });
+    }
+  }
+  catch (err) {
+    return res.status(500).json(err);
   }
 
   return res.status(404).json({ err: `Room id ${id} or User in ${users} not found` });
@@ -147,10 +152,16 @@ router.put('/:id/uninviteMembers', async (req, res) => {
     return res.status(400).json({ err });
   }
 
-  const room = uninviteMembers(user._id, id, users);
-  if (room) {
-    return res.json({ room });
+  try {
+    const room = await uninviteMembers(user._id, id, users);
+    if (room) {
+      return res.json({ room });
+    }
   }
+  catch (err) {
+    return res.status(500).json(err);
+  }
+
 
   return res.status(404).json({ err: `Room id ${id} or User in ${users} not found` });
 });

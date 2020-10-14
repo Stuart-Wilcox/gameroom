@@ -10,6 +10,7 @@ import {
     InputAdornment,
 } from '@material-ui/core';
 import { searchUsersThunk } from '../../../redux/actions/user';
+import { inviteMemberToRoomThunk, uninviteMemberFromRoomThunk } from '../../../redux/actions/rooms';
 import IState, { IAsyncData } from '../../../redux/states';
 import { SimpleUser } from '../../../redux/states/user';
 import {
@@ -44,19 +45,26 @@ const handlePerformSearch = (searchValue: string, dispatch: React.Dispatch<any>)
 const debouncedHandlePerformSearch = debounce(handlePerformSearch, 1000);
 
 interface IProps {
+    roomId: string;
+    invitedMembers: string[];
     users: IAsyncData<SimpleUser[]>,
 }
 
 const InviteUsers: React.FC<IProps> = (props: IProps) => {
     const {
+        roomId,
+        invitedMembers,
         users,
     } = props;
-
-    console.log(users.data);
 
     const dispatch = useDispatch();
     const [searchValue, setSearchValue] = React.useState<string>('');
     const inviteLink = 'http://invite-link';
+    const invitedMemberMap = invitedMembers.reduce((acc, curr) => {
+        acc[curr] = true;
+    }, {} as any);
+
+    console.log(invitedMemberMap);
 
     const handleCopyInviteLink = () => {
         copyToClipboard(inviteLink);
@@ -65,6 +73,14 @@ const InviteUsers: React.FC<IProps> = (props: IProps) => {
     const handleUserSearchValueChange = (username: string) => {
         setSearchValue(username);
         debouncedHandlePerformSearch(username, dispatch);
+    };
+
+    const handleInviteUser = (userId: string) => {
+        dispatch(inviteMemberToRoomThunk(roomId, [userId]));
+    };
+
+    const handleUninviteUser = (userId: string) => {
+        dispatch(uninviteMemberFromRoomThunk(roomId, [userId]));
     };
 
     return (
@@ -116,12 +132,26 @@ const InviteUsers: React.FC<IProps> = (props: IProps) => {
                                     </TableCell>
                                     <TableCell>
                                         {/* invite/uninvite based on their current room */}
-                                        <Button
-                                            onClick={() => console.log(`Invite user ${user._id} to room`)}
-                                            disabled={false}
-                                        >
-                                            Invite
-                                        </Button>
+                                        {
+                                            invitedMemberMap[user._id] ?
+                                            (
+                                                <Button
+                                                    onClick={() => handleUninviteUser(user._id)}
+                                                    disabled={false}
+                                                >
+                                                    Uninvite
+                                                </Button>
+                                            )
+                                            :
+                                            (
+                                                <Button
+                                                    onClick={() => handleInviteUser(user._id)}
+                                                    disabled={false}
+                                                >
+                                                    Invite
+                                                </Button>
+                                            )
+                                        }
                                     </TableCell>
                                 </TableRow>
                             ))

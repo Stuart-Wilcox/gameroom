@@ -71,7 +71,7 @@ export const inviteMembers = async (creator: string, _id: string, users: string[
     return undefined;
   }
 
-  for (const userId in users) {
+  for (const userId of users) {
     // check if user is already invited
     if (room.invitedMembers.includes(userId)) {
       continue;

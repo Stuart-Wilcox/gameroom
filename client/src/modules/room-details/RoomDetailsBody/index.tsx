@@ -18,11 +18,15 @@ import InvitePlayers from './InvitePlayers';
 
 interface IProps {
   isActive?: boolean;
+  roomId?: string;
+  invitedMembers: string[];
 }
 
 const RoomDetailsBody: React.FC<IProps> = (props: IProps) => {
   const {
     isActive,
+    roomId='',
+    invitedMembers,
   } = props;
 
   const [tab, setTab] = React.useState<number>(2);
@@ -63,7 +67,10 @@ const RoomDetailsBody: React.FC<IProps> = (props: IProps) => {
           value={tab}
           index={2}
         > 
-          <InvitePlayers />
+          <InvitePlayers
+            roomId={roomId}
+            invitedMembers={invitedMembers}
+          />
         </TabPanel>
       </Paper>
     </StyledRoomDetailsBody>

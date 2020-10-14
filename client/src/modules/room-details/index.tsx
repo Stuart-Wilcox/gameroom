@@ -100,6 +100,8 @@ const RoomDetails: React.FC<IProps> = (props: IProps) => {
       />
       <RoomDetailsBody
         isActive={room?.isActive}
+        roomId={room?._id}
+        invitedMembers={(room?.invitedMembers || []).map(user => user._id)}
       />
       
       <JoinRoomModal
