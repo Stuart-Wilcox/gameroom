@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { validate } from '../utils';
 import {
   list,
+  listActive,
   create,
   remove,
   retrieve,
@@ -11,12 +12,20 @@ import {
 const router = Router();
 
 /**
- * Returns all games available to a user, which means all games in which they are a player
+ * Returns all games available
  */
 router.get('/', async (req, res) => {
+  const games = await list();
+  return res.json({ games });
+});
+
+/**
+ * Returns all games available to a user, which means all games in which they are a player
+ */
+router.get('/active', async (req, res) => {
   const user = req.user as any;
 
-  const games = await list(user.id);
+  const games = await listActive(user.id);
   return res.json({ games });
 });
 

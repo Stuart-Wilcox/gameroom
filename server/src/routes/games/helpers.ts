@@ -1,6 +1,15 @@
-import { Game, Room, User } from '../../models';
+import {
+  Game,
+  GameType,
+  Room,
+  User,
+} from '../../models';
 
-export const list = async (userId: string) => {
+export const list = () => {
+  return GameType.find({});
+}
+
+export const listActive = async (userId: string) => {
   return Game.find({
     isActive: true,
     players: { id: userId },

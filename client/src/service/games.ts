@@ -6,6 +6,11 @@ export const listGames = async () => {
   return sendRequest(url, 'GET');
 };
 
+export const listActiveGames = async () => {
+  const url = `${baseURL}/api/games/active`;
+  return sendRequest(url, 'GET');
+};
+
 export const createGame = async (room: string, name: string, gameSettings: any) => {
   const url = `${baseURL}/api/games`;
   const body = { room, name, gameSettings };

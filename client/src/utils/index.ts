@@ -51,6 +51,19 @@ export const debounce = (func: any, timeout: number) => {
   return run;
 };
 
+export const formatName = (name: string): string => {
+  const initials = name.split(' ').map(p => p[0]);
+  if (initials.length > 1) {
+    return initials.slice(0, 2).join('');
+  }
+
+  return name.slice(0, 2);
+};
+
+export const getJoinRoomLink = (roomId: string) => {
+  return `${window.location.protocol}${window.location.host}/join-room/${roomId}`;
+};
+
 class StorageItem {
   key: string;
   constructor(key: string) { this.key = key; }

@@ -5,6 +5,7 @@ export { default as Checkbox } from './Checkbox';
 export { default as Dialog } from './Dialog';
 export { default as ErrorSnackbar } from './ErrorSnackbar';
 export { default as Link } from './Link';
+export { default as Loading } from './Loading';
 export { default as Paper } from './Paper';
 export { default as Snackbar } from './Snackbar';
 export { default as Table } from './Table';

@@ -8,6 +8,7 @@ import {
   AvatarGroup,
 } from 'src/modules/common'
 import { SimpleUser } from 'src/redux/states/user';
+import { formatName } from 'src/utils';
 
 
 interface IProps {
@@ -33,10 +34,12 @@ const UsersDisplay: React.FC<IProps> = (props: IProps) => {
         <AvatarGroup spacing={'medium'}>
           {
             currentMembers?.map(member => (
-              <Avatar key={member._id}>
-                {/* TODO put in user picture */}
-                {member.username} 
-              </Avatar>
+                <Avatar key={member._id}>
+                  {/* TODO put in user picture */}
+                  <div title={member.username}>
+                    {formatName(member.username)}
+                  </div>
+                </Avatar>
             ))
           }
           {

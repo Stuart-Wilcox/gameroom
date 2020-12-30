@@ -16,6 +16,7 @@ import { SimpleUser } from '../../../redux/states/user';
 import {
     debounce,
     copyToClipboard,
+    getJoinRoomLink,
 } from '../../../utils'
 import {
     Button,
@@ -59,7 +60,7 @@ const InviteUsers: React.FC<IProps> = (props: IProps) => {
 
     const dispatch = useDispatch();
     const [searchValue, setSearchValue] = React.useState<string>('');
-    const inviteLink = 'http://invite-link';
+    const inviteLink = getJoinRoomLink(roomId);
     const invitedMemberMap = React.useMemo(() => {
         return invitedMembers.reduce((acc, curr) => {
             acc[curr] = true;

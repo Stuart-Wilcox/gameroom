@@ -13,6 +13,9 @@ export {
   joinRoomThunk as joinRoom,
   leaveRoomThunk as leaveRoom,
 } from './rooms';
+export {
+  listGamesThunk as listGames,
+} from './games';
 
 import * as LoginActions from './login';
 export { LoginActions };
@@ -22,3 +25,5 @@ import * as UserActions from './user';
 export { UserActions };
 import * as RoomsActions from './rooms';
 export { RoomsActions };
+import * as GamesActions from './games';
+export { GamesActions };

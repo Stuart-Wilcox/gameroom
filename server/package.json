@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon --watch src/**/* --exec \"ts-node src/index.ts\"",
     "build": "webpack",
-    "dropTables": "ts-node scripts/dropTables.ts"
+    "dropTables": "ts-node scripts/dropTables.ts",
+    "loadData": "ts-node scripts/loadData.ts"
   },
   "author": "",
   "license": "ISC",
