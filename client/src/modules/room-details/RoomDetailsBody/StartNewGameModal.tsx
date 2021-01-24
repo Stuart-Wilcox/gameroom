@@ -21,10 +21,10 @@ interface IProps {
   onComplete: (room: any) => void;
   onError: (err: string) => void;
 
-  game: any;
-  isLoading: boolean;
-  err: string;
-  createGame: (gameId: string) => void;
+  // game: any;
+  // isLoading: boolean;
+  // err: string;
+  // createGame: (gameId: string) => void;
 }
 
 const CreateGameModal: React.FC<IProps> = (props: IProps) => {
@@ -37,18 +37,21 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
     onComplete,
     onError,
 
-    game,
-    isLoading,
-    err,
-    createGame,
+    // game,
+    // isLoading,
+    // err,
+    // createGame,
   } = props;
 
+  const isLoading = false;
+  const err: any = null;
+  const game: any = null;
 
   // send complete if detected
   React.useEffect(() => {
     if (!isLoading && !err) {
       // clear and close the modal
-      onComplete(room);
+      onComplete(game);
       setImmediate(() => {
         onClose();
       });
@@ -71,6 +74,10 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
     onClose();
   };
 
+  const createGame = (gameId: any) => {
+
+  };
+
   return (
     <Dialog
       open={open}
@@ -91,7 +98,7 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
           variant={'contained'}
           color={'primary'}
           disabled={isLoading}
-          onClick={() => createGame(gameId)}
+          onClick={() => createGame(game?.id)}
         >
           Create Game
         </Button>
@@ -108,11 +115,11 @@ const mapStateToProps = (state: IState) => ({
 });
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>) => ({
-  joinRoom: (roomId: string) => dispatch(performJoinRoom(roomId))
+  joinRoom: (roomId: string, name: string, gameSettings: any) => dispatch(performCreateGame(roomId, name, gameSettings))
 });
 
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(JoinRoomModal);
+)(CreateGameModal);

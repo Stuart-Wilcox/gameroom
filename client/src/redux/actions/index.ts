@@ -15,6 +15,7 @@ export {
 } from './rooms';
 export {
   listGamesThunk as listGames,
+  createGameThunk as createGame,
 } from './games';
 
 import * as LoginActions from './login';

@@ -1,7 +1,7 @@
 import {
     listGames as performListGames,
     listActiveGames as performListActiveGames,
-    createGame as peformCreateGame,
+    createGame as performCreateGame,
     removeGame as performRemoveGame,
     updateGame as performUpdateGame,
 } from 'src/service';
@@ -95,5 +95,17 @@ export const listGamesThunk = () => async (dispatch: React.Dispatch<any>) => {
     }
     catch (error) {
         dispatch(listGamesFailed(error));
+    }
+};
+
+export const createGameThunk = (roomId: string, name: string, gameSettings: any) => async (dispatch: React.Dispatch<any>) => {
+    dispatch(createGame());
+
+    try {
+        const { game } = await performCreateGame(roomId, name, gameSettings);
+        dispatch(createGameSuccess(game));
+    }
+    catch (error) {
+        dispatch(createGameFailed(error));
     }
 };

@@ -19,6 +19,7 @@ import InvitePlayers from './InvitePlayers';
 interface IProps {
   isActive?: boolean;
   roomId?: string;
+  roomName?: string;
   invitedMembers: string[];
 }
 
@@ -26,6 +27,7 @@ const RoomDetailsBody: React.FC<IProps> = (props: IProps) => {
   const {
     isActive,
     roomId='',
+    roomName='',
     invitedMembers,
   } = props;
 
@@ -55,7 +57,10 @@ const RoomDetailsBody: React.FC<IProps> = (props: IProps) => {
           value={tab}
           index={0}
         > 
-          <NewGame />
+          <NewGame 
+            roomId={roomId}
+            roomName={roomName}
+          />
         </TabPanel>
         <TabPanel
           value={tab}

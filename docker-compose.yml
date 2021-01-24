@@ -1,0 +1,26 @@
+version: '3.3'
+services:
+  db:
+    build:
+      context: db
+      dockerfile: ./deploy/Dockerfile
+    image: db
+    volumes:
+    - db_data:/data
+  server:
+    build:
+      context: server
+      dockerfile: ./deploy/Dockerfile
+    image: server
+    ports:
+    - "8080:80"
+  client:
+    build:
+      context: client
+      dockerfile: ./deploy/Dockerfile
+    image: client
+    ports:
+    - "8082:80"
+
+volumes:
+  db_data: {}

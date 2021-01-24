@@ -19,17 +19,26 @@ import {
     TableRow,
     TableCell,
 } from 'src/modules/common';
+import StartNewGameModal from './StartNewGameModal';
 import {
     StyledNewGame, 
 } from './index.style';
 
 
 interface IProps {
-
+    roomId: string;
+    roomName: string;
 };
 
 const NewGame: React.FC<IProps> = (props: IProps) => {
+    const {
+        roomId,
+        roomName,
+    } = props;
+
     const dispatch = useDispatch();
+    const [newGameModalOpen, setNewGameModalOpen] = React.useState<boolean>(false);
+    const [gameName, setGameName] = React.useState<string>('');
 
     const {
         data,
@@ -51,11 +60,13 @@ const NewGame: React.FC<IProps> = (props: IProps) => {
         );
     }
 
-    console.log('GAMES', data);
-
     const handleCreateNewGame = (gameTypeId: string) => {
 
     };
+
+    const handleNewGameModalClose = () => {
+        setNewGameModalOpen(false);
+    }
 
     return (
         <StyledNewGame>
@@ -94,6 +105,15 @@ const NewGame: React.FC<IProps> = (props: IProps) => {
                     }
                 </TableBody>
             </Table>
+            <StartNewGameModal
+                roomId={roomId}
+                roomName={roomName}
+                gameName={gameName}
+                open={newGameModalOpen}
+                onClose={handleNewGameModalClose}
+                onComplete={handleNewGameModalClose}
+                onError={handleNewGameModalClose}                
+            />
         </StyledNewGame>
     );
 };
