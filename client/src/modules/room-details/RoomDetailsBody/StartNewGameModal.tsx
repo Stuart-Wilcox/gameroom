@@ -11,11 +11,14 @@ import {
   DialogContent,
   DialogActions,
 } from 'src/modules/common';
+import { StyledNewGameSettingsLabel, StyledNewGameSettingsRow } from './index.style';
+import { TextField, Select } from 'src/modules/common';
+import { MenuItem } from '@material-ui/core';
 
 interface IProps {
   roomId: string;
   roomName?: string;
-  gameName?: string;
+  gameDetails?: any;
   open: boolean;
   onClose: () => void;
   onComplete: (room: any) => void;
@@ -31,21 +34,26 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
   const {
     roomId,
     roomName,
-    gameName,
+    gameDetails,
     open,
     onClose,
     onComplete,
     onError,
-
-    // game,
-    // isLoading,
-    // err,
-    // createGame,
   } = props;
+
+  const {
+    name='',
+    _id='',
+    allGameSettings={},
+  } = gameDetails || {};
 
   const isLoading = false;
   const err: any = null;
   const game: any = null;
+
+  const [chosenGameSettings, setChosenGameSettings] = React.useState<any>(
+    Object.keys(allGameSettings).reduce((o, k) => { o[k]=''; return o; }, {} as any)
+  );
 
   // send complete if detected
   React.useEffect(() => {
@@ -74,8 +82,23 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
     onClose();
   };
 
-  const createGame = (gameId: any) => {
+  const createGame = () => {
+    console.log('Create game', {
+      roomId,
+      roomName,
+      name,
+      _id,
+      chosenGameSettings,
+    })
+  };
 
+  const handleChosenSettingsChange = (settingName: string) => (settingValue: string | number) => {
+    const newChosenGameSettings = { 
+      ...chosenGameSettings,
+      [settingName]: settingValue,
+    };
+
+    setChosenGameSettings(newChosenGameSettings);
   };
 
   return (
@@ -83,9 +106,26 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
       open={open}
       onClose={() => handleClose()}
     >
-      <DialogTitle>Create New Game</DialogTitle>
+      <DialogTitle>Creating a new {!!name ? `game of ${name}` : 'game'}</DialogTitle>
       <DialogContent>
-        Creating a new {!!gameName ? `game of ${gameName}` : 'game'}
+        {/* Display settings in fillable form */}
+        {
+          Object.keys(allGameSettings).map(settingName => (
+            <StyledNewGameSettingsRow
+              key={settingName}
+            >
+              <StyledNewGameSettingsLabel>
+                {allGameSettings[settingName].label}
+              </StyledNewGameSettingsLabel>
+              <SettingInput
+                type={allGameSettings[settingName].type}
+                value={chosenGameSettings[settingName]}
+                options={allGameSettings[settingName].options}
+                onChange={handleChosenSettingsChange(settingName)}
+              />
+            </StyledNewGameSettingsRow>
+          ))
+        }
       </DialogContent>
       <DialogActions>
         <Button
@@ -98,7 +138,7 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
           variant={'contained'}
           color={'primary'}
           disabled={isLoading}
-          onClick={() => createGame(game?.id)}
+          onClick={() => createGame()}
         >
           Create Game
         </Button>
@@ -107,6 +147,55 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
   );
 }
 
+interface ISettingInputProps {
+  type: 'string' | 'number' | 'select';
+  value: string | number;
+  options?: Array<{ key: string, value: string }>
+  onChange: (value: string | number) => void;
+};
+
+const SettingInput: React.FC<ISettingInputProps> = (props: ISettingInputProps) => {
+  const { type, value, options=[], onChange } = props;
+
+  if (type === 'string') {
+    return (
+      <TextField
+        value={value as string}
+        onChange={(event) => onChange(event.target.value)}
+      />
+    );
+  }
+  else if (type === 'number') {
+    return (
+      <TextField
+        type={'number'}
+        value={value as number}
+        onChange={(event) => onChange(event.target.value)}
+      />
+    );
+  }
+  else if (type === 'select') {
+    return (
+      <Select
+        value={value as string}
+        onChange={(event) => onChange(event.target.value as string)}
+      >
+        {
+          options.map(({key, value}) => (
+            <MenuItem
+              value={key}
+              key={key}
+            >
+              {value}
+            </MenuItem>
+          ))
+        }
+      </Select>
+    );
+  }
+
+  return (<div/>);
+};
 
 const mapStateToProps = (state: IState) => ({
   room: state.rooms.joinRoom.data,

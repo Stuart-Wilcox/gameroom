@@ -38,7 +38,7 @@ const NewGame: React.FC<IProps> = (props: IProps) => {
 
     const dispatch = useDispatch();
     const [newGameModalOpen, setNewGameModalOpen] = React.useState<boolean>(false);
-    const [gameName, setGameName] = React.useState<string>('');
+    const [gameDetails, setGameDetails] = React.useState<any>(null);
 
     const {
         data,
@@ -60,8 +60,9 @@ const NewGame: React.FC<IProps> = (props: IProps) => {
         );
     }
 
-    const handleCreateNewGame = (gameTypeId: string) => {
-
+    const handleCreateNewGame = (gameType: any) => {
+        setGameDetails(gameType);
+        setNewGameModalOpen(true);
     };
 
     const handleNewGameModalClose = () => {
@@ -93,7 +94,7 @@ const NewGame: React.FC<IProps> = (props: IProps) => {
                                 </TableCell>
                                 <TableCell>
                                     <Button
-                                        onClick={() => handleCreateNewGame(gameType._id)}
+                                        onClick={() => handleCreateNewGame(gameType)}
                                     >
                                         Start New Game
                                     </Button>
@@ -108,7 +109,7 @@ const NewGame: React.FC<IProps> = (props: IProps) => {
             <StartNewGameModal
                 roomId={roomId}
                 roomName={roomName}
-                gameName={gameName}
+                gameDetails={gameDetails}
                 open={newGameModalOpen}
                 onClose={handleNewGameModalClose}
                 onComplete={handleNewGameModalClose}

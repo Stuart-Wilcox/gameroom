@@ -4,6 +4,9 @@ import * as CookieParser from 'cookie-parser';
 import Routes from './routes';
 import { Session, Authenticate, Authorize } from './auth';
 import * as config from './config';
+import applyFixtures from './models/fixtures/applyFixtures';
+
+applyFixtures();
 
 const app = Express();
 

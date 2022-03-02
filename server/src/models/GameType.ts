@@ -11,10 +11,15 @@ const GameTypeSchema = new mongoose.Schema({
   },
 });
 
-interface IGameType extends mongoose.Document {
+export interface IGameTypeFields {
   id: string,
   name: string,
   allGameSettings: any,
+}
+interface IGameType extends mongoose.Document {
+  id: string,
+  name: string,
+  allGameSettings: any,  
 };
 
 const GameType = mongoose.model<IGameType>('GameType', GameTypeSchema);

@@ -46,3 +46,14 @@ export const StyledEmptyInviteUsers = styled.div`
     }
   }
 `;
+
+export const StyledNewGameSettingsRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+`;
+
+export const StyledNewGameSettingsLabel = styled.div`
+  
+`;
