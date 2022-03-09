@@ -13,6 +13,7 @@ module.exports = {
     plugins: [new TsconfigPathsPlugin({ configFile: "./tsconfig.json" })]
   },
   output: {
+    publicPath: "/",
     path: path.resolve(__dirname, 'build')
   },
   module: {
