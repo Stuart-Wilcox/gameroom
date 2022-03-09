@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-mongoose.connect('mongodb://localhost:27017/boggle', { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+mongoose.connect(process.env['DB_URL'] || '', { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
   if (err) {
     console.log('Failed to connect to db\n', err);
     return;

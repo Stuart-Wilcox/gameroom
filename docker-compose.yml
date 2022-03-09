@@ -11,14 +11,20 @@ services:
     build:
       context: server
       dockerfile: ./deploy/Dockerfile
+    environment:
+      - DB_URL=mongodb://db:27017/gameroom
     image: server
+    depends_on:
+      - db
     ports:
-    - "8080:80"
+    - "8080:8080"
   client:
     build:
       context: client
       dockerfile: ./deploy/Dockerfile
     image: client
+    depends_on:
+      - server
     ports:
     - "8082:80"
 

@@ -1,3 +1,4 @@
+import { config as envConfig } from 'dotenv';
 import * as Express from 'express';
 import * as BodyParser from 'body-parser';
 import * as CookieParser from 'cookie-parser';
@@ -5,6 +6,9 @@ import Routes from './routes';
 import { Session, Authenticate, Authorize } from './auth';
 import * as config from './config';
 import applyFixtures from './models/fixtures/applyFixtures';
+
+// setup env for use
+envConfig();
 
 applyFixtures();
 

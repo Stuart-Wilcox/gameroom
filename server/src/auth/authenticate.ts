@@ -1,4 +1,4 @@
-import { Router } from 'Express';
+import { Router } from 'express';
 import * as Passport from 'passport';
 import * as PassportLocal from 'passport-local';
 import * as JWT from 'jsonwebtoken';

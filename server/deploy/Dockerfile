@@ -14,5 +14,7 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+RUN npm run clean:build
+
 EXPOSE 8080
-CMD [ "node", "server.js" ]
+CMD [ "node", "dist/index.js" ]
