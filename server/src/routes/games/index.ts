@@ -8,6 +8,7 @@ import {
   retrieve,
   update,
 } from './helpers';
+import createGame from '../../games/boggle';
 
 const router = Router();
 
@@ -112,6 +113,23 @@ router.put('/:id', async (req, res) => {
   }
 
   return res.status(404).json({ err: `Game id ${id} not found` });
+});
+
+/**
+ * Starts a game
+ */
+ router.post('/:id', async (req, res) => {
+  const user = req.user as any;
+  const { id } = req.params;
+
+  const game = await retrieve(user.id, id);
+  if (game) {
+    // TODO type of game check
+    await createGame();
+    return res.json({ 'status': 'game-started' })
+  }
+
+  return res.status(404).json({ err: `Unable to retrieve game, please ensure Game id ${game} exists` });
 });
 
 export default router;
