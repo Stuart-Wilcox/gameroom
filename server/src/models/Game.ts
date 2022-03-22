@@ -23,6 +23,11 @@ const GameSchema = new mongoose.Schema({
     ref: 'Room',
     required: true,
   },
+  gameType: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GameType',
+    required: true,
+  },
   gameSettings: {
     type: Object,
   },
@@ -32,7 +37,7 @@ const GameSchema = new mongoose.Schema({
   },
 });
 
-interface IGame extends mongoose.Document {
+export interface IGame extends mongoose.Document {
   id: string,
   created: Date,
   name: string,

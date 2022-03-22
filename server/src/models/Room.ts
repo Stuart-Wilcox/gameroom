@@ -36,7 +36,7 @@ const RoomSchema = new mongoose.Schema({
   },
 });
 
-interface IRoom extends mongoose.Document {
+export interface IRoom extends mongoose.Document {
   id: string,
   created: Date,
   name: string,

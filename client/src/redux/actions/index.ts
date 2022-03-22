@@ -16,6 +16,7 @@ export {
 export {
   listGamesThunk as listGames,
   createGameThunk as createGame,
+  retrieveGameThunk as retrieveGame,
 } from './games';
 
 import * as LoginActions from './login';

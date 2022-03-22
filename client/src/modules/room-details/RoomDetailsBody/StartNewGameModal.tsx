@@ -19,15 +19,17 @@ interface IProps {
   roomId: string;
   roomName?: string;
   gameDetails?: any;
+  game?: any;
+  isLoading: boolean;
+  err: string;
   open: boolean;
   onClose: () => void;
-  onComplete: (room: any) => void;
+  onComplete: (game: any) => void;
   onError: (err: string) => void;
-
-  // game: any;
-  // isLoading: boolean;
-  // err: string;
-  // createGame: (gameId: string) => void;
+  createGame: (roomId: string,
+    name: string,
+    gameTypeId: string,
+    chosenGameSettings: any) => void;
 }
 
 const CreateGameModal: React.FC<IProps> = (props: IProps) => {
@@ -36,9 +38,13 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
     roomName,
     gameDetails,
     open,
+    isLoading,
+    err,
+    game,
     onClose,
     onComplete,
     onError,
+    createGame,
   } = props;
 
   const {
@@ -47,9 +53,6 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
     allGameSettings={},
   } = gameDetails || {};
 
-  const isLoading = false;
-  const err: any = null;
-  const game: any = null;
 
   const [chosenGameSettings, setChosenGameSettings] = React.useState<any>(
     Object.keys(allGameSettings).reduce((o, k) => { o[k]=''; return o; }, {} as any)
@@ -57,14 +60,14 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
 
   // send complete if detected
   React.useEffect(() => {
-    if (!isLoading && !err) {
+    if (game && !isLoading && !err) {
       // clear and close the modal
       onComplete(game);
       setImmediate(() => {
         onClose();
       });
     }
-  }, [isLoading]);
+  }, [game, isLoading, err]);
 
   // send error if detected
   React.useEffect(() => {
@@ -82,14 +85,13 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
     onClose();
   };
 
-  const createGame = () => {
-    console.log('Create game', {
+  const handleCreateGame = () => {
+    createGame(
       roomId,
-      roomName,
       name,
       _id,
       chosenGameSettings,
-    })
+    );
   };
 
   const handleChosenSettingsChange = (settingName: string) => (settingValue: string | number) => {
@@ -138,7 +140,7 @@ const CreateGameModal: React.FC<IProps> = (props: IProps) => {
           variant={'contained'}
           color={'primary'}
           disabled={isLoading}
-          onClick={() => createGame()}
+          onClick={() => handleCreateGame()}
         >
           Create Game
         </Button>
@@ -175,9 +177,10 @@ const SettingInput: React.FC<ISettingInputProps> = (props: ISettingInputProps) =
     );
   }
   else if (type === 'select') {
+    const selectValue: string = value ? value as string : options[0].value;
     return (
       <Select
-        value={value as string}
+        value={selectValue}
         onChange={(event) => onChange(event.target.value as string)}
       >
         {
@@ -198,13 +201,16 @@ const SettingInput: React.FC<ISettingInputProps> = (props: ISettingInputProps) =
 };
 
 const mapStateToProps = (state: IState) => ({
-  room: state.rooms.joinRoom.data,
-  isLoading: state.rooms.joinRoom.isLoading,
-  err: state.rooms.joinRoom.err,
+  game: state.games.createGame.data,
+  isLoading: state.games.createGame.isLoading,
+  err: state.games.createGame.err,
 });
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>) => ({
-  joinRoom: (roomId: string, name: string, gameSettings: any) => dispatch(performCreateGame(roomId, name, gameSettings))
+  createGame: (roomId: string,
+    name: string,
+    gameTypeId: string,
+    chosenGameSettings: any) => dispatch(performCreateGame(roomId, name, gameTypeId, chosenGameSettings))
 });
 
 

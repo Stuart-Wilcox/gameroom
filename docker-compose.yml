@@ -7,6 +7,10 @@ services:
     image: db
     volumes:
     - db_data:/data
+    ports:
+    - "27017:27017"
+    - "28017:28017"
+
   server:
     build:
       context: server
@@ -23,12 +27,13 @@ services:
       context: realtime
       dockerfile: ./deploy/Dockerfile
     environment:
-      - SOCKET_SERVER_PORT=9000
+      - SOCKET_SERVER_URL=http://realtime:9000
     image: realtime
     depends_on:
       - server
     ports:
     - "9000:9000"
+    # TODO expose socketio port
   client:
     build:
       context: client

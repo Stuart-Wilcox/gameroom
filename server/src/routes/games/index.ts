@@ -38,15 +38,16 @@ router.post('/', async (req, res) => {
   const {
     room,
     name,
+    gameTypeId,
     gameSettings,
   } = req.body;
 
-  const err = await validate({ name, room, gameSettings });
+  const err = await validate({ name, room, gameTypeId, gameSettings });
   if (err) {
     return res.status(400).json({ err });
   }
 
-  const game = await create(user.id, room, name, gameSettings);
+  const game = await create(user.id, room, name, gameTypeId, gameSettings);
   if (game) {
     return res.json({ game });
   }

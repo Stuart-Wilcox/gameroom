@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "initialize": "npm install --prefix server && npm install --prefix client",
+    "initialize": "npm install --prefix server && npm install --prefix client && npm install --prefix realtime",
     "start-server": "npm start --prefix server",
     "start-client": "npm start --prefix client",
+    "start-realtime": "npm start --prefix realtime",
+    "build": "docker-compose build",
+    "start": "docker-compose up -d && docker-compose logs -f",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

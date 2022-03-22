@@ -16,7 +16,7 @@ export interface IGameTypeFields {
   name: string,
   allGameSettings: any,
 }
-interface IGameType extends mongoose.Document {
+export interface IGameType extends mongoose.Document {
   id: string,
   name: string,
   allGameSettings: any,  

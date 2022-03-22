@@ -3,6 +3,9 @@ import {
     useDispatch,
     useSelector,
 } from 'react-redux';
+import {
+    useHistory,
+} from 'react-router-dom';
 import IState from 'src/redux/states';
 import {
     GameType,
@@ -37,6 +40,7 @@ const NewGame: React.FC<IProps> = (props: IProps) => {
     } = props;
 
     const dispatch = useDispatch();
+    const history = useHistory();
     const [newGameModalOpen, setNewGameModalOpen] = React.useState<boolean>(false);
     const [gameDetails, setGameDetails] = React.useState<any>(null);
 
@@ -67,7 +71,12 @@ const NewGame: React.FC<IProps> = (props: IProps) => {
 
     const handleNewGameModalClose = () => {
         setNewGameModalOpen(false);
-    }
+    };
+
+    const handleNewGameModalComplete = (game: any) => {
+        // navigate to game page
+        history.push(`/games/${game._id}`);
+    };
 
     return (
         <StyledNewGame>
@@ -112,7 +121,7 @@ const NewGame: React.FC<IProps> = (props: IProps) => {
                 gameDetails={gameDetails}
                 open={newGameModalOpen}
                 onClose={handleNewGameModalClose}
-                onComplete={handleNewGameModalClose}
+                onComplete={handleNewGameModalComplete}
                 onError={handleNewGameModalClose}                
             />
         </StyledNewGame>

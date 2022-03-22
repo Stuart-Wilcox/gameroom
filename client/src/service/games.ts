@@ -11,9 +11,9 @@ export const listActiveGames = async () => {
   return sendRequest(url, 'GET');
 };
 
-export const createGame = async (room: string, name: string, gameSettings: any) => {
+export const createGame = async (room: string, name: string, gameTypeId: string, gameSettings: any) => {
   const url = `${baseURL}/api/games`;
-  const body = { room, name, gameSettings };
+  const body = { room, name, gameTypeId, gameSettings };
   return sendRequest(url, 'POST', body);
 };
 

@@ -4,6 +4,7 @@ import {
   Room,
   User,
 } from '../../models';
+import type { IRoom } from '../../models/Room';
 
 export const list = () => {
   return GameType.find({});
@@ -18,16 +19,22 @@ export const listActive = async (userId: string) => {
   );
 };
 
-export const create = async (creator: string, roomId: string, name: string, gameSettings: any) => {
+export const create = async (creator: string, roomId: string, name: string, gameTypeId: string, gameSettings: any) => {
     // ensure room is valid
-  const validRoom = await Room.findOne({ id: roomId, isActive: true })
+  const validRoom = await Room.findOne({ _id: roomId, isActive: true });
   if (!validRoom) {
     return undefined
+  }
+
+  const validGameType = await GameType.findOne({ _id: gameTypeId });
+  if (!validGameType) {
+    return undefined;
   }
 
   const game = new Game({
     name,
     room: validRoom.id,
+    gameType: validGameType.id,
     gameSettings,
     isActive: true,
   });
@@ -44,14 +51,29 @@ export const remove = async (userId: string, id: string) => {
 };
 
 export const retrieve = async (userId: string, id: string) => {
-  return Game.findOne({
+  // make sure player is part of room that game is in
+
+  const game = await Game.findOne({
     isActive: true,
-    players: { id: userId },
+    _id: id,
   }).sort(
     'created'
   ).populate(
     'players'
-  );
+  ).populate('room');
+
+  if (!game) {
+    return game;
+  }
+
+  const room = (game.room as unknown as IRoom)
+  const userCanAccesss = room.currentMembers.includes(userId)
+
+  if (!userCanAccesss) {
+    return null;
+  }
+
+  return game;
 };
 
 export const update = async (userId: string, id: string, name?: string, gameSettings?: any) => {

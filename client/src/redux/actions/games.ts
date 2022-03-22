@@ -4,6 +4,7 @@ import {
     createGame as performCreateGame,
     removeGame as performRemoveGame,
     updateGame as performUpdateGame,
+    retrieveGame as performRetrieveGame,
 } from 'src/service';
 
 export const LIST_GAMES = 'LIST_GAMES';
@@ -25,6 +26,10 @@ export const REMOVE_GAME_FAILED = 'REMOVE_GAME_FAILED';
 export const UPDATE_GAME = 'UPDATE_GAME';
 export const UPDATE_GAME_SUCCESS = 'UPDATE_GAME_SUCCESS';
 export const UPDATE_GAME_FAILED = 'UPDATE_GAME_FAILED';
+
+export const RETRIEVE_GAME = 'RETRIEVE_GAME';
+export const RETRIEVE_GAME_SUCCESS = 'RETRIEVE_GAME_SUCCESS';
+export const RETRIEVE_GAME_FAILED = 'RETRIEVE_GAME_FAILED';
 
 export const listGames = () => ({
     type: LIST_GAMES,
@@ -86,6 +91,19 @@ export const updateGameFailed = (error: any) => ({
     payload: error,
 });
 
+export const retrieveGame = () => ({
+    type: RETRIEVE_GAME,
+});
+export const retrieveGameSuccess = (response: any) => ({
+    type: RETRIEVE_GAME_SUCCESS,
+    payload: response,
+});
+export const retrieveGameFailed = (error: any) => ({
+    type: RETRIEVE_GAME,
+    payload: error,
+});
+
+
 export const listGamesThunk = () => async (dispatch: React.Dispatch<any>) => {
     dispatch(listGames());
 
@@ -98,14 +116,26 @@ export const listGamesThunk = () => async (dispatch: React.Dispatch<any>) => {
     }
 };
 
-export const createGameThunk = (roomId: string, name: string, gameSettings: any) => async (dispatch: React.Dispatch<any>) => {
+export const createGameThunk = (roomId: string, name: string, gameTypeId: string, gameSettings: any) => async (dispatch: React.Dispatch<any>) => {
     dispatch(createGame());
 
     try {
-        const { game } = await performCreateGame(roomId, name, gameSettings);
+        const { game } = await performCreateGame(roomId, name, gameTypeId, gameSettings);
         dispatch(createGameSuccess(game));
     }
     catch (error) {
         dispatch(createGameFailed(error));
+    }
+};
+
+export const retrieveGameThunk = (gameId: string) => async (dispatch: React.Dispatch<any>) => {
+    dispatch(retrieveGame());
+
+    try {
+        const { game } = await performRetrieveGame(gameId);
+        dispatch(retrieveGameSuccess(game));
+    }
+    catch (error) {
+        dispatch(retrieveGameFailed(error));
     }
 };
